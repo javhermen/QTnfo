@@ -9,8 +9,6 @@
         <QTbuttonSidebar />
         <QTbuttonSidebar />
         <QTbuttonSidebar />
-        <QTbuttonSidebar />
-        <QTbuttonSidebar />
       </ul>
     </div>
   </aside>

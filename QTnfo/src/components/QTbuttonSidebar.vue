@@ -1,5 +1,7 @@
 <template>
-  <li><a href="#"></a></li>
+  <li><a href="#">
+    <!-- <img src="/001-a.png" alt=""> -->
+  </a></li>
 </template>
 
 <style>
@@ -23,6 +25,18 @@
 
     background-color: rgb(86, 96, 106);
 
-    border-radius: 5px;
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow: inset 0px 0px 7px 1px rgba(43, 48, 54, 1);
+
+    background-image: url('/001-a.png');
+
+    background-size: cover;
+  }
+
+  img {
+    width: 100%;
   }
 </style>

@@ -27,6 +27,11 @@
 
     border-radius: 10px;
 
-    box-shadow: 0px 0px 13px -5px aqua;
+    box-shadow: inset 0px 0px 25px -15px aqua;
+  }
+
+  p {
+    margin: 10px;
+    margin-left: 15px;
   }
 </style>
