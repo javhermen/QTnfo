@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import QTheader from './components/QTheader.vue'
 import QTsidebar from './components/QTsidebar.vue'
 import QTcanvas from './components/QTcanvas.vue'
+
 </script>
 
 <template>
@@ -11,11 +12,19 @@ import QTcanvas from './components/QTcanvas.vue'
     <QTsidebar />
     <QTcanvas />
   </div>
+
+  
 </template>
 
 <style>
+  div#app {
+    display: flex;
+
+    flex-direction: column;
+  }
   div.wrapper {
-    height: calc(100% - 105px);
+    height: 100%;
+    width: 100%;
     display: flex;
   }
 </style>

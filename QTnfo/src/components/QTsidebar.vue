@@ -28,7 +28,6 @@
 
   .aside {
     background-color: rgb(43, 48, 54);
-    width: 75px;
     height: 100%;
     
     margin: 15px;
@@ -37,6 +36,8 @@
     margin-bottom: 0;
     
     border-radius: 15px;
+
+    padding-bottom: 10px;
   }
 
   ul {
