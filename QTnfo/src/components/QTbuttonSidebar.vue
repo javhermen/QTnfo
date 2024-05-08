@@ -29,7 +29,8 @@
 
     overflow: hidden;
 
-    box-shadow: inset 0px 0px 7px 1px rgba(43, 48, 54, 1);
+    box-shadow: inset 0px 0px 7px 1px rgb(43, 48, 54);
+    /* box-shadow: inset 0px 0px 7px 1px rgb(0, 0, 0); */
 
     background-image: url('/001-a.png');
 
