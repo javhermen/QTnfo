@@ -1,7 +1,14 @@
+<script setup>
+  import { RouterLink } from 'vue-router';
+</script>
+
 <template>
-  <li><a href="#">
+  <li>
+    <!-- <a href="vier"> -->
+    <RouterLink to="/vier"></RouterLink>
     <!-- <img src="/001-a.png" alt=""> -->
-  </a></li>
+    <!-- </a> -->
+  </li>
 </template>
 
 <style>
