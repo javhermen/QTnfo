@@ -1,5 +1,6 @@
 <script>
   import QTbox from './QTbox.vue'
+  import QTcontextMenu from './Menus/QTcontextMenu.vue'
   //const confetti = new JSConfetti()
 
   export default {
@@ -12,11 +13,15 @@
           { id: 2, X: 250, Y: 100 },
           { id: 3, X: 250, Y: -10 },
           { id: 4, X: 250, Y: 210 },
-        ]
+        ],
+        lol: true,
+        QTx: 0,
+        QTy: 0
       }
     },
     components: {
-      QTbox
+      QTbox,
+      QTcontextMenu
     },
     mounted() {
       this.showConfetti()
@@ -24,13 +29,19 @@
     methods: {
       showConfetti() {
         //confetti.addConfetti()
+      },
+      showQTcontextMenu(event) {
+        this.lol = true;
+        this.QTx = event.clientX;
+        this.QTy = event.clientY;
       }
     }
   }
 </script>
 
 <template>
-  <div id="main">
+  <!-- <div id="main" @contextmenu.prevent="console.log('you did it!')"> -->
+  <div id="main" @contextmenu.prevent="showQTcontextMenu($event)">
     <div class="border">
       <div class="int">
       <!-- <div class="int" @click="showConfetti"> -->
@@ -83,6 +94,8 @@
       </div>
     </div>
   </div>
+
+  <QTcontextMenu v-if="lol" :x="QTx" :y="QTy" ></QTcontextMenu>
 </template>
 
 <style>

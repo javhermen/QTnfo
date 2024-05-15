@@ -10,7 +10,7 @@ EXPOSE 5173
 
 #RUN npm i
 
-ENTRYPOINT [ "/bin/sh", "-c" ]
+#ENTRYPOINT [ "/bin/sh", "-c" ]
 
 #CMD [ "vite --host" ]
-CMD [ "npm i && npm run host" ]
+CMD npm i && npm run host

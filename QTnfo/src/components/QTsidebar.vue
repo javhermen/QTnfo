@@ -6,9 +6,9 @@
   <aside>
     <div class="aside">
       <ul>
-        <QTbuttonSidebar />
-        <QTbuttonSidebar />
-        <QTbuttonSidebar />
+        <QTbuttonSidebar>2</QTbuttonSidebar>
+        <QTbuttonSidebar>3</QTbuttonSidebar>
+        <QTbuttonSidebar>4</QTbuttonSidebar>
       </ul>
     </div>
   </aside>

@@ -6,7 +6,7 @@
   <header>
     <div class="header">
       <ul>
-        <QTbuttonSidebar />
+        <QTbuttonSidebar>1</QTbuttonSidebar>
       </ul>
     </div>
   </header>
