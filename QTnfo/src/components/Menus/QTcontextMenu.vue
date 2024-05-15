@@ -30,5 +30,7 @@
 
     top: 200px;
     left: 550px;
+
+    z-index: 99;
   }
 </style>

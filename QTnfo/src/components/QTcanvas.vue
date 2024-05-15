@@ -14,7 +14,7 @@
           { id: 3, X: 250, Y: -10 },
           { id: 4, X: 250, Y: 210 },
         ],
-        lol: true,
+        lol: false,
         QTx: 0,
         QTy: 0
       }
@@ -41,7 +41,7 @@
 
 <template>
   <!-- <div id="main" @contextmenu.prevent="console.log('you did it!')"> -->
-  <div id="main" @contextmenu.prevent="showQTcontextMenu($event)">
+  <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @click="lol = false">
     <div class="border">
       <div class="int">
       <!-- <div class="int" @click="showConfetti"> -->

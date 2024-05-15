@@ -25,7 +25,7 @@ export default {
 
 <style>
   #box {
-    z-index: 100;
+    z-index: 10;
     width: 100px;
     height: 100px;
 
