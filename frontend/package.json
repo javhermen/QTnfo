@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "author": "Quote",
   "scripts": {
     "dev": "vite",
     "host": "vite --host",

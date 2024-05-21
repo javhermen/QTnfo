@@ -1,9 +1,21 @@
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockefile-frontend
     ports:
       - "3000:5173"
     volumes:
       - type: bind
-        source: ./QTnfo
+        source: ./frontend
+        target: /app
+  databaseAPI:
+    build:
+      context: .
+      dockerfile: Dockefile-databaseAPI
+    ports:
+      - "3015:3000"
+    volumes:
+      - type: bind
+        source: ./databaseAPI
         target: /app
