@@ -1,21 +1,33 @@
 services:
   frontend:
+    profiles:
+      - frontend
     build:
       context: .
-      dockerfile: Dockefile-frontend
+      dockerfile: Dockerfile-frontend
     ports:
       - "3000:5173"
     volumes:
       - type: bind
         source: ./frontend
         target: /app
-  databaseAPI:
+  mongodb:
+    image: mongo:5
+    volumes:
+      - ./mongodb/db:/data/db
+      - mongo_configdb:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: Quote
+      MONGO_INITDB_ROOT_PASSWORD: etouQ
+  api-database:
     build:
       context: .
-      dockerfile: Dockefile-databaseAPI
+      dockerfile: Dockerfile-api-database
     ports:
-      - "3015:3000"
+      - "3050:3050"
     volumes:
       - type: bind
-        source: ./databaseAPI
+        source: ./api-database
         target: /app
+volumes:
+  mongo_configdb:

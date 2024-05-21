@@ -2,12 +2,15 @@
   "name": "datapi",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "author": "Quote",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -L"
   },
   "dependencies": {
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
