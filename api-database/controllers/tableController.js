@@ -99,6 +99,27 @@ class TableController {
 		}
 	}
 
+  static async add(res, table, body) {
+		try {
+      const data = await TableModel.add(table, body);
+      
+      if (data) {
+        res.json(data);
+      }
+      else {
+        res.status(400).json({
+          response: 'Something went wrong',
+          error: 'SOMETHING',
+          col: col,
+          val: val,
+          table: table
+        });
+      }
+		}
+    catch (error) {
+      this.errorHandler(res, error);
+		}
+	}
 
 
   static async errorHandler(res, error) {

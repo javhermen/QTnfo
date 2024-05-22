@@ -1,12 +1,20 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const ApiController = require('./controllers/apiController');
 
 const app = express();
 const port = 3050;
 
 
+app.use(bodyParser.json())
+
+
 // Routes
 app.get('/api', ApiController.router);
+app.get('/api/:table', ApiController.router);
+app.get('/api/:table/id/:id', ApiController.router);
+
+app.post('/api/:table', ApiController.router);
 
 
 // Start the server

@@ -3,6 +3,11 @@ class TableModel {
     return { ello: "true" }
   }
 
+	static async add(table, body) {
+		let test = { table , insertion: { ...body } }
+    return test;
+  }
+
 	static async getAll(table) {
 		
 

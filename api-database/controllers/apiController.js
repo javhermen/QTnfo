@@ -3,22 +3,20 @@ const TableController = require('./tableController');
 class ApiController {
 
   static async router(req, res) {
-    const { table, id, name, col, val, imgName } = req.params;
+    const { method, params, body } = req;
+    const { table, id } = params;
+
+    console.log(body); // GET POST PUT DELETE
 
     if (id) {
       TableController.getByID(res, table, id);
     }
-    else if (name) {
-      TableController.getByName(res, table, name);
-    }
-    else if (col && val) {
-      TableController.getFilteredBy(res, table, col, val);
-    }
-    else if (imgName) {
-      res.sendFile(imgName, { root: './uploads' });
-    }
     else if (table) {
-      TableController.getAll(res, table);
+      if (method === "GET") {
+        TableController.getAll(res, table);
+      } else if (method === "POST") {
+        TableController.add(res, table, body);
+      }
     }
     else {
       TableController.test(res);
