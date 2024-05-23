@@ -10,11 +10,17 @@ app.use(bodyParser.json())
 
 
 // Routes
+/*
 app.get('/api', ApiController.router);
 app.get('/api/:table', ApiController.router);
 app.get('/api/:table/id/:id', ApiController.router);
 
 app.post('/api/:table', ApiController.router);
+*/
+
+app.all('/api', ApiController.router);
+app.all('/api/:table', ApiController.router);
+app.all('/api/:table/id/:id', ApiController.router);
 
 
 // Start the server
