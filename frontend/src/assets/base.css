@@ -45,7 +45,7 @@
 }
 
 body {
-  height: 100vh;
+  height: 100svh;
   color: var(--color-text);
   background: rgb(25, 27, 29);
   transition:

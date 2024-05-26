@@ -1,11 +1,20 @@
-<script setup>
+<script>
   import { RouterLink } from 'vue-router';
+
+  export default {
+    props: {
+      link: {
+        type: String,
+        default: "/"
+      }
+    }
+  }
 </script>
 
 <template>
   <li>
     <!-- <a href="vier"> -->
-    <RouterLink to="/vier"><slot>0</slot></RouterLink>
+    <RouterLink :to="link"><slot>0</slot></RouterLink>
     <!-- <img src="/001-a.png" alt=""> -->
     <!-- </a> -->
   </li>

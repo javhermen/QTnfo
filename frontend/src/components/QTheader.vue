@@ -6,7 +6,7 @@
   <header>
     <div class="header">
       <ul>
-        <QTbuttonSidebar>1</QTbuttonSidebar>
+        <QTbuttonSidebar link="/vier">1</QTbuttonSidebar>
       </ul>
     </div>
   </header>
@@ -27,5 +27,12 @@
     border-radius: 15px;
 
     padding-bottom: 10px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
   }
 </style>
