@@ -6,6 +6,7 @@ export default {
     }
   },
   props: {
+    box: Object,
     X: Number,
     Y: Number,
     Z: Number
@@ -17,7 +18,7 @@ export default {
 
 
 <template>
-  <div id="box" ref="box" :style="{left: X+'px', top: Y+'px'}">
+  <div id="box" ref="box" :style="{left: box.position.x+'px', top: box.position.y+'px'}">
     <p>X: {{ X }}</p>
     <p>Y: {{ Y }}</p>
   </div>

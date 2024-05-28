@@ -1,19 +1,14 @@
 <script>
   import QTbox from './QTbox.vue'
   import QTcontextMenu from './Menus/QTcontextMenu.vue'
-  //const confetti = new JSConfetti()
+  import axios from 'axios';
 
   export default {
     data() {
       return {
         canWitdh: 300,
         canHeight: 150,
-        boxes: [
-          { id: 1, X: 50, Y: 50 },
-          { id: 2, X: 250, Y: 100 },
-          { id: 3, X: 250, Y: -10 },
-          { id: 4, X: 250, Y: 210 },
-        ],
+        boxes: null,
         lol: false,
         QTx: 0,
         QTy: 0
@@ -24,12 +19,11 @@
       QTcontextMenu
     },
     mounted() {
-      this.showConfetti()
+      axios
+        .get('http://localhost:3050/api/QTnotes')
+        .then(response => this.boxes = response.data)
     },
     methods: {
-      showConfetti() {
-        //confetti.addConfetti()
-      },
       showQTcontextMenu(event) {
         this.lol = true;
         this.QTx = event.clientX;
@@ -41,14 +35,14 @@
 
 <template>
   <!-- <div id="main" @contextmenu.prevent="console.log('you did it!')"> -->
-  <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @click="lol = false">
+  <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @mousedown="lol = false">
     <div class="border">
       <div class="int">
       <!-- <div class="int" @click="showConfetti"> -->
 
         <!-- <QTbox :X=50 :Y=50 /> -->
         <!-- <QTbox :X=250 :Y=100 /> -->
-        <QTbox v-for="box in boxes" :X=box.X :Y=box.Y :key="box.id" />
+        <QTbox v-for="box in boxes" :box=box :X=box.position.x :Y=box.position.y :key="box._id" />
 
         <svg  id="svgtest2" height="124" width="124">
           <marker id="circleWhite" markerWidth="2" markerHeight="2" refX="1" refY="1">

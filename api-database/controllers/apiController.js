@@ -16,6 +16,7 @@ class ApiController {
     }
   }
 
+  /*
   static async router(req, res) {
     const { method, params, body } = req;
     const { table, id } = params;
@@ -36,9 +37,41 @@ class ApiController {
         if (id) {
 
         } else if (table) {
-          TableController.add(res, table, body);
+          TableController.insert(res, table, body);
         } else {
           TableController.test(res);
+        }
+        break;
+
+      case "PUT":
+        break;
+
+      case "DELETE":
+        break;
+    
+      default:
+        break;
+    }
+  }
+  */
+
+  static async router(req, res) {
+    const { method, params, body } = req;
+    const { table, id } = params;
+
+
+    switch (method) {
+      case "GET":
+        if (table) {
+          TableController.getAll(res, table);
+        } else {
+          res.json(ApiController.JSON_HELP);
+        }
+        break;
+
+      case "POST":
+        if (table) {
+          TableController.insert(res, table, body);
         }
         break;
 

@@ -3,7 +3,7 @@ class TableModel {
     return { ello: "true" }
   }
 
-	static async add(table, body) {
+	static async insert(table, body) {
 		let test = { table , insertion: { ...body } }
     return test;
   }
