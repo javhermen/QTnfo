@@ -3,13 +3,23 @@
 export default {
   data() {
     return {
+      dragging: false
     }
   },
   props: {
-    box: Object,
-    X: Number,
-    Y: Number,
-    Z: Number
+    box: Object
+  },
+  methods: {
+    drag(e) {
+      if (this.dragging) {
+        this.box.position.x = e.movementX + this.box.position.x;
+        this.box.position.y = e.movementY + this.box.position.y;
+      }
+    },
+    drag2(e) {
+      this.box.position.x = e.movementX + this.box.position.x;
+      this.box.position.y = e.movementY + this.box.position.y;
+    }
   }
 }
 
@@ -18,16 +28,15 @@ export default {
 
 
 <template>
-  <div id="box" ref="box" :style="{left: box.position.x+'px', top: box.position.y+'px'}">
-    <p>X: {{ X }}</p>
-    <p>Y: {{ Y }}</p>
+  <div id="box" ref="box" :style="{left: box.position.x+'px', top: box.position.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @contextmenu.prevent @mousedown="this.dragging = true" @mousemove="drag($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false">
+  <!-- <div id="box" ref="box" :style="{left: box.position.x+'px', top: box.position.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @contextmenu.prevent @ondrag="drag2"> -->
+    <p>X: {{ box.position.x }}</p>
+    <p>Y: {{ box.position.y }}</p>
   </div>
 </template>
 
 <style>
   #box {
-    z-index: 10;
-    width: 100px;
     height: 100px;
 
     position: absolute;

@@ -42,7 +42,7 @@
 
         <!-- <QTbox :X=50 :Y=50 /> -->
         <!-- <QTbox :X=250 :Y=100 /> -->
-        <QTbox v-for="box in boxes" :box=box :X=box.position.x :Y=box.position.y :key="box._id" />
+        <QTbox v-for="box in boxes" :box=box :key="box._id" />
 
         <svg  id="svgtest2" height="124" width="124">
           <marker id="circleWhite" markerWidth="2" markerHeight="2" refX="1" refY="1">
