@@ -56,6 +56,7 @@
 
     background-color: rgb(86, 96, 106);
 
+    border-radius: 100px;
     border-radius: 10px;
 
     overflow: hidden;

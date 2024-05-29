@@ -122,7 +122,7 @@
 
     background-color: rgb(43, 48, 54);
 
-    background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%);
+    /* background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%); */
 
     box-shadow: inset 0px 0px 20px 2px ;
 

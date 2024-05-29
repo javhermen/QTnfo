@@ -24,6 +24,7 @@
     
     margin: 15px;
     
+    border-radius: 150px;
     border-radius: 15px;
 
     padding-bottom: 10px;

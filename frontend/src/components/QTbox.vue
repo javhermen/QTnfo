@@ -15,10 +15,6 @@ export default {
         this.box.position.x = e.movementX + this.box.position.x;
         this.box.position.y = e.movementY + this.box.position.y;
       }
-    },
-    drag2(e) {
-      this.box.position.x = e.movementX + this.box.position.x;
-      this.box.position.y = e.movementY + this.box.position.y;
     }
   }
 }

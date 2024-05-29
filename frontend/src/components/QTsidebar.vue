@@ -33,6 +33,7 @@
     margin-top: 0;
     margin-bottom: 0;
     
+    border-radius: 150px;
     border-radius: 15px;
 
     padding-bottom: 10px;
