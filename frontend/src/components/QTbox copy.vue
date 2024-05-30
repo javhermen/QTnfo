@@ -1,65 +1,77 @@
 <script>
+
 export default {
-  mounted() {
-    this.dragElement(this.$refs.box);
+  data() {
+    return {
+      dragging: false
+    }
+  },
+  props: {
+    box: Object,
+    camera: Object
   },
   methods: {
-    dragElement(elmnt) {
-      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-      elmnt.onmousedown = dragMouseDown;
-
-      function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-      }
-
-      function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-      }
-
-      function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
+    drag(e) {
+      if (this.dragging) {
+        this.box.position.x = e.movementX + this.box.position.x;
+        this.box.position.y = e.movementY + this.box.position.y;
       }
     }
   }
 }
+
 </script>
 
 
 
 <template>
-  <div id="box" ref="box">
-    <p>X:{{ pos1 }}</p>
-    <p>Y:</p>
+  <div id="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="this.dragging = true" @mousemove="drag($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false">
+    <p>X: {{ box.position.x }}</p>
+    <p>Y: {{ box.position.y }}</p>
   </div>
 </template>
 
 <style>
   #box {
-    width: 100px;
     height: 100px;
 
     position: absolute;
 
+    /*
     top: 50px;
     left: 50px;
+    */
 
     background-color: rgb(27, 48, 73);
 
     border-radius: 10px;
+    /* border-radius: 100%; */
 
-    box-shadow: 0px 0px 13px -5px aqua;
+    /* box-shadow: inset 0px 0px 25px -15px aqua; */
+    box-shadow: inset 0px 0px 25px -15px rgb(0, 0, 0);
+    /* box-shadow: inset 10px -10px 25px -15px rgb(0, 0, 0); */
   }
+
+  p {
+    margin: 10px;
+    margin-left: 15px;
+  }
+
+  /*
+  #box::after {
+    z-index: 90;
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: rgb(27, 48, 73);
+
+    position: absolute;
+
+    top: 40px;
+    right: -10px;
+
+    border-radius: 0px 100% 100% 0px;
+  }
+  */
 </style>

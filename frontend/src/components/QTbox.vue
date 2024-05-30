@@ -3,11 +3,19 @@
 export default {
   data() {
     return {
-      dragging: false
+      dragging: false,
+      cursor: { x: 0, y: 0 },
+      h1: null,
+      i1: null,
+      oLeft: null,
+      oTop: null
     }
   },
   props: {
-    box: Object
+    box: Object,
+    camera: Object,
+    dragobj: Object,
+    last: Function
   },
   methods: {
     drag(e) {
@@ -24,15 +32,15 @@ export default {
 
 
 <template>
-  <div id="box" ref="box" :style="{left: box.position.x+'px', top: box.position.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @contextmenu.prevent @mousedown="this.dragging = true" @mousemove="drag($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false">
-  <!-- <div id="box" ref="box" :style="{left: box.position.x+'px', top: box.position.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @contextmenu.prevent @ondrag="drag2"> -->
+  <!-- <div id="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="this.dragging = true" @mousemove="drag($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false"> -->
+  <div :id="box._id" class="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="last(this.$refs.box)">
     <p>X: {{ box.position.x }}</p>
     <p>Y: {{ box.position.y }}</p>
   </div>
 </template>
 
 <style>
-  #box {
+  .box {
     height: 100px;
 
     position: absolute;

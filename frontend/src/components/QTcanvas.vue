@@ -6,12 +6,21 @@
   export default {
     data() {
       return {
-        canWitdh: 300,
-        canHeight: 150,
+        camera: {
+          x: 0,
+          y: 0,
+        },
         boxes: null,
-        lol: false,
-        QTx: 0,
-        QTy: 0
+        showContextMenu: false,
+        contextMenuX: 0,
+        contextMenuY: 0,
+        dragging: false,
+        dragobj: null,
+        cursor: { x: 0, y: 0 },
+        h1: null,
+        i1: null,
+        oLeft: null,
+        oTop: null
       }
     },
     components: {
@@ -25,24 +34,91 @@
     },
     methods: {
       showQTcontextMenu(event) {
-        this.lol = true;
-        this.QTx = event.clientX;
-        this.QTy = event.clientY;
+        this.showContextMenu = true;
+        this.contextMenuX = event.clientX;
+        this.contextMenuY = event.clientY;
+      },
+      moveCamera(event){
+        if (this.dragging && false) {
+        this.camera.x = event.movementX + this.camera.x;
+        this.camera.y = event.movementY + this.camera.y;
+
+        console.log(this.camera.x);
+      }
+      },
+      congrats() {
+        console.log("congrats! You done did it!1!");
+      },
+      makeObjectToDrag(obj) {
+        if (obj) {
+          this.dragobj = this.rel(obj.id);
+          document.onmousedown = this.startMove;
+          document.onmouseup = this.drop;
+          document.onmousemove = this.moving;
+        }
+      },
+      rel(ob) {
+        if (ob) {
+          return document.getElementById(ob)
+        } else {
+          return null
+        }
+      },
+      startMove(e) {
+        if (this.dragobj) {
+          this.getCursorPos(e);
+          // this.dragobj.className = "moving";
+          this.i1 = this.cursor.x - this.dragobj.offsetLeft;
+          this.h1 = this.cursor.y - this.dragobj.offsetTop;
+        }
+      },
+      drop() {
+        if (this.dragobj) {
+          // this.dragobj.className = "move";
+          this.dragobj = null;
+        }
+      },
+      moving(e) {
+        this.getCursorPos(e);
+        if (this.dragobj) {
+          this.oLeft = this.cursor.x - this.i1;
+          this.oTop = this.cursor.y - this.h1;
+          this.dragobj.style.left = this.oLeft + 'px';
+          this.dragobj.style.top = this.oTop + 'px';
+        }
+      },
+      getCursorPos(e) {
+        e = e || window.event;
+        if (e.pageX || e.pageY) {
+          this.cursor.x = e.pageX;
+          this.cursor.y = e.pageY;
+        } else {
+          var de = document.documentElement;
+          var db = document.body;
+          this.cursor.x = e.clientX +
+            (de.scrollLeft || db.scrollLeft) - (de.clientLeft || 0);
+          this.cursor.y = e.clientY +
+            (de.scrollTop || db.scrollTop) - (de.clientTop || 0);
+        }
+        return this.cursor;
       }
     }
   }
 </script>
 
 <template>
-  <!-- <div id="main" @contextmenu.prevent="console.log('you did it!')"> -->
-  <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @mousedown="lol = false">
+  <!-- <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @mousedown="showContextMenu = false"> -->
+  <div id="main" @mousedown="this.dragging = true" @mousemove="moveCamera($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false">
+  <!-- <div id="main" @mousedown="this.dragging = true" @mouseup="this.dragging = false" @mouseleave="this.dragging = false"> -->
     <div class="border">
       <div class="int">
+        <p>X: {{ camera.x }}</p>
+        <p>Y: {{ camera.y }}</p>
       <!-- <div class="int" @click="showConfetti"> -->
 
         <!-- <QTbox :X=50 :Y=50 /> -->
         <!-- <QTbox :X=250 :Y=100 /> -->
-        <QTbox v-for="box in boxes" :box=box :key="box._id" />
+        <QTbox v-for="box in boxes" :box :camera :key="box._id" :last="makeObjectToDrag"/>
 
         <svg  id="svgtest2" height="124" width="124">
           <marker id="circleWhite" markerWidth="2" markerHeight="2" refX="1" refY="1">
@@ -89,7 +165,7 @@
     </div>
   </div>
 
-  <QTcontextMenu v-if="lol" :x="QTx" :y="QTy" ></QTcontextMenu>
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" ></QTcontextMenu>
 </template>
 
 <style>

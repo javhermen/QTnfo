@@ -1,63 +1,112 @@
 <script>
   import QTbox from './QTbox.vue'
-  //const confetti = new JSConfetti()
+  import QTcontextMenu from './Menus/QTcontextMenu.vue'
+  import axios from 'axios';
 
   export default {
     data() {
       return {
-        canWitdh: 300,
-        canHeight: 150
+        camera: {
+          x: 0,
+          y: 0,
+        },
+        boxes: null,
+        showContextMenu: false,
+        contextMenuX: 0,
+        contextMenuY: 0,
+        dragging: false
       }
     },
     components: {
-      QTbox
+      QTbox,
+      QTcontextMenu
     },
     mounted() {
-      this.showConfetti()
-
-      let canv = this.$refs.myCanvas;
-
-      this.canWitdh = canv.offsetWidth;
-      this.canHeight = canv.offsetHeight;
+      axios
+        .get('http://localhost:3050/api/QTnotes')
+        .then(response => this.boxes = response.data)
     },
     methods: {
-      showConfetti() {
-        //confetti.addConfetti()
+      showQTcontextMenu(event) {
+        this.showContextMenu = true;
+        this.contextMenuX = event.clientX;
+        this.contextMenuY = event.clientY;
       },
-      drawLine() {
-        this.getBetter();
-        let canv = this.$refs.myCanvas;
+      moveCamera(event){
+        if (this.dragging && false) {
+          this.camera.x = event.movementX + this.camera.x;
+          this.camera.y = event.movementY + this.camera.y;
 
-
-        let canCon = canv.getContext('2d');
-        canCon.beginPath();
-        canCon.moveTo(0,300);
-        // canCon.lineTo(canv.offsetWidth,canv.offsetHeight);
-        canCon.lineTo(1920,300);
-        // canCon.strokeStyle = "red";
-        canCon.lineWidth = 10;
-        canCon.stroke();
+          console.log(this.camera.x);
+        }
       },
-      getBetter() {
-        let canv = this.$refs.myCanvas;
-
-        this.canWitdh = canv.offsetWidth;
-        this.canHeight = canv.offsetHeight;
+      congrats() {
+        console.log("congrats! You done did it!1!");
       }
     }
   }
 </script>
 
 <template>
-  <div id="main">
+  <!-- <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @mousedown="showContextMenu = false"> -->
+  <div id="main" @mousedown="this.dragging = true" @mousemove="moveCamera($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false">
+  <!-- <div id="main" @mousedown="this.dragging = true" @mouseup="this.dragging = false" @mouseleave="this.dragging = false"> -->
     <div class="border">
       <div class="int">
+        <p>X: {{ camera.x }}</p>
+        <p>Y: {{ camera.y }}</p>
       <!-- <div class="int" @click="showConfetti"> -->
-        <QTbox />
-        <canvas class="int" @click="drawLine" ref="myCanvas" :width="canWitdh" :height="canHeight"></canvas>
+
+        <!-- <QTbox :X=50 :Y=50 /> -->
+        <!-- <QTbox :X=250 :Y=100 /> -->
+        <QTbox v-for="box in boxes" :box :camera :key="box._id" />
+
+        <svg  id="svgtest2" height="124" width="124">
+          <marker id="circleWhite" markerWidth="2" markerHeight="2" refX="1" refY="1">
+            <circle cx="1" cy="1" r="0.5" fill="white" />
+          </marker>
+
+          <path d="M 122 112 Q 122 122 112 122 L 12 122 Q 2 122 2 112 L 2 12 Q 2 2 12 2 L 112 2 Q 122 2 122 10" marker-start="url(#circleWhite)" marker-end="url(#circleWhite)" stroke="white" stroke-width="4" fill="none" />
+          <!-- <path d="M 122 112 L 122 122 L 2 122 L 2 2 L 122 2 L 122 10" marker-start="url(#circleWhite)" marker-end="url(#circleWhite)" stroke="white" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 2 2 L 122 2 L 122 10" marker-start="url(#circleWhite)" marker-end="url(#circleWhite)" stroke="white" stroke-width="4" fill="none" /> -->
+        </svg>
+
+        <svg id="svgtest" height="200" width="150">
+          <defs>
+            <marker id="circleRed" markerWidth="2" markerHeight="2" refX="1" refY="1">
+              <circle cx="1" cy="1" r="0.5" fill="red" />
+            </marker>
+            
+            <marker id="circleBlu" markerWidth="2" markerHeight="2" refX="1" refY="1">
+              <circle cx="1" cy="1" r="0.5" fill="cyan" />
+            </marker>
+            
+            <marker id="circleGreen" markerWidth="2" markerHeight="2" refX="1" refY="1">
+              <circle cx="1" cy="1" r="0.5" fill="lime" />
+            </marker>
+          </defs>
+
+          <!-- <path d="M 0 50 L 100 50" stroke="cyan" stroke-width="4" fill="none" /> -->
+
+          <path d="M 10 20 c 50 0 50 -5 80 -5" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+          <path d="M 10 10 l 0 20" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+          <path d="M 90 5 l 0 20" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+
+          <path d="M 10 50 c 50 0 50 50 80 50" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+          <path d="M 0 40 l 0 20" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+          <path d="M 100 90 l 0 20" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+
+          <path d="M 10 80 c 50 0 50 100 80 100" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" />
+          <path d="M 10 70 l 0 20" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" />
+          <path d="M 90 170 l 0 20" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" />
+          <!-- <path d="M 10 0 Q -10 50 10 100" stroke="cyan" fill="none" /> -->
+          <!-- <path d="M 10 0 Q -25 50 10 100" stroke="cyan" fill="none" /> -->
+        </svg>
       </div>
     </div>
   </div>
+
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" ></QTcontextMenu>
 </template>
 
 <style>
@@ -90,7 +139,7 @@
 
     background-color: rgb(43, 48, 54);
 
-    background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%);
+    /* background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%); */
 
     box-shadow: inset 0px 0px 20px 2px ;
 
@@ -126,5 +175,19 @@
 
     /* top: 0; */
     
+  }
+
+  #svgtest {
+    position: absolute;
+
+    top: 50px;
+    left: 150px;
+  }
+
+  #svgtest2 {
+    position: absolute;
+
+    top: 38px;
+    left: 38px;
   }
 </style>
