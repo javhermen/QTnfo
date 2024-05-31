@@ -3,26 +3,29 @@
 export default {
   data() {
     return {
-      dragging: false,
-      cursor: { x: 0, y: 0 },
-      h1: null,
-      i1: null,
-      oLeft: null,
-      oTop: null
     }
   },
   props: {
     box: Object,
-    camera: Object,
-    dragobj: Object,
-    last: Function
+    camera: Object
+  },
+  computed: {
+    style() {
+      return {left: this.box.position.x + this.camera.x+'px', top: this.box.position.y + this.camera.y+'px', zIndex: this.box.position.z, width: this.box.dimensions.width+'px', height: this.box.dimensions.height+'px'}
+    }
   },
   methods: {
-    drag(e) {
-      if (this.dragging) {
-        this.box.position.x = e.movementX + this.box.position.x;
-        this.box.position.y = e.movementY + this.box.position.y;
-      }
+    drag() {
+      document.addEventListener("mousemove", this.updatePos);
+      document.addEventListener("mouseup", this.stopDrag);
+    },
+    stopDrag() {
+      document.removeEventListener("mousemove", this.updatePos);
+      document.removeEventListener("mouseup", this.stopDrag);
+    },
+    updatePos(e) {
+      this.box.position.x = e.movementX + this.box.position.x;
+      this.box.position.y = e.movementY + this.box.position.y;
     }
   }
 }
@@ -32,8 +35,8 @@ export default {
 
 
 <template>
-  <!-- <div id="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="this.dragging = true" @mousemove="drag($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false"> -->
-  <div :id="box._id" class="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="last(this.$refs.box)">
+  <div :id="box._id" :ref="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag">
+  <!-- <div :id="box._id" class="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="drag"> -->
     <p>X: {{ box.position.x }}</p>
     <p>Y: {{ box.position.y }}</p>
   </div>
@@ -41,8 +44,6 @@ export default {
 
 <style>
   .box {
-    height: 100px;
-
     position: absolute;
 
     /*

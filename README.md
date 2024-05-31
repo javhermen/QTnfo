@@ -10,3 +10,7 @@ https://codepen.io/web-tiki/pen/ZYmZoV/
 https://codepen.io/ndaidong/pen/PpBwVz
 
 https://www.youtube.com/watch?v=2gfb-n2p94A
+
+https://macarthur.me/posts/options-for-removing-event-listeners/
+
+https://caniuse.com/?search=addEventListener

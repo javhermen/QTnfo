@@ -1,5 +1,6 @@
 <script>
   import QTbox from './QTbox.vue'
+  import QTline from './QTline.vue'
   import QTcontextMenu from './Menus/QTcontextMenu.vue'
   import axios from 'axios';
 
@@ -13,18 +14,12 @@
         boxes: null,
         showContextMenu: false,
         contextMenuX: 0,
-        contextMenuY: 0,
-        dragging: false,
-        dragobj: null,
-        cursor: { x: 0, y: 0 },
-        h1: null,
-        i1: null,
-        oLeft: null,
-        oTop: null
+        contextMenuY: 0
       }
     },
     components: {
       QTbox,
+      QTline,
       QTcontextMenu
     },
     mounted() {
@@ -39,68 +34,16 @@
         this.contextMenuY = event.clientY;
       },
       moveCamera(event){
-        if (this.dragging && false) {
-        this.camera.x = event.movementX + this.camera.x;
-        this.camera.y = event.movementY + this.camera.y;
-
-        console.log(this.camera.x);
-      }
+        if (this.dragging) {
+          this.camera.x = event.movementX + this.camera.x;
+          this.camera.y = event.movementY + this.camera.y;
+        }
       },
       congrats() {
         console.log("congrats! You done did it!1!");
       },
-      makeObjectToDrag(obj) {
-        if (obj) {
-          this.dragobj = this.rel(obj.id);
-          document.onmousedown = this.startMove;
-          document.onmouseup = this.drop;
-          document.onmousemove = this.moving;
-        }
-      },
-      rel(ob) {
-        if (ob) {
-          return document.getElementById(ob)
-        } else {
-          return null
-        }
-      },
-      startMove(e) {
-        if (this.dragobj) {
-          this.getCursorPos(e);
-          // this.dragobj.className = "moving";
-          this.i1 = this.cursor.x - this.dragobj.offsetLeft;
-          this.h1 = this.cursor.y - this.dragobj.offsetTop;
-        }
-      },
-      drop() {
-        if (this.dragobj) {
-          // this.dragobj.className = "move";
-          this.dragobj = null;
-        }
-      },
-      moving(e) {
-        this.getCursorPos(e);
-        if (this.dragobj) {
-          this.oLeft = this.cursor.x - this.i1;
-          this.oTop = this.cursor.y - this.h1;
-          this.dragobj.style.left = this.oLeft + 'px';
-          this.dragobj.style.top = this.oTop + 'px';
-        }
-      },
-      getCursorPos(e) {
-        e = e || window.event;
-        if (e.pageX || e.pageY) {
-          this.cursor.x = e.pageX;
-          this.cursor.y = e.pageY;
-        } else {
-          var de = document.documentElement;
-          var db = document.body;
-          this.cursor.x = e.clientX +
-            (de.scrollLeft || db.scrollLeft) - (de.clientLeft || 0);
-          this.cursor.y = e.clientY +
-            (de.scrollTop || db.scrollTop) - (de.clientTop || 0);
-        }
-        return this.cursor;
+      stopCam() {
+        this.dragging = false;
       }
     }
   }
@@ -108,7 +51,7 @@
 
 <template>
   <!-- <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @mousedown="showContextMenu = false"> -->
-  <div id="main" @mousedown="this.dragging = true" @mousemove="moveCamera($event)" @mouseup="this.dragging = false" @mouseleave="this.dragging = false">
+  <div id="main" @mousedown.middle="this.dragging = true" @mousemove="moveCamera" @mouseup="this.dragging = false" @mouseleave="this.dragging = false" @mousedown.left="this.dragging = false">
   <!-- <div id="main" @mousedown="this.dragging = true" @mouseup="this.dragging = false" @mouseleave="this.dragging = false"> -->
     <div class="border">
       <div class="int">
@@ -118,7 +61,7 @@
 
         <!-- <QTbox :X=50 :Y=50 /> -->
         <!-- <QTbox :X=250 :Y=100 /> -->
-        <QTbox v-for="box in boxes" :box :camera :key="box._id" :last="makeObjectToDrag"/>
+        <QTbox v-for="box in boxes" :box :camera :key="box._id"/>
 
         <svg  id="svgtest2" height="124" width="124">
           <marker id="circleWhite" markerWidth="2" markerHeight="2" refX="1" refY="1">
@@ -161,6 +104,10 @@
           <!-- <path d="M 10 0 Q -10 50 10 100" stroke="cyan" fill="none" /> -->
           <!-- <path d="M 10 0 Q -25 50 10 100" stroke="cyan" fill="none" /> -->
         </svg>
+
+        <QTline :camera :line="{ p1: { x: 300, y: 300 }, p2: { x: 500, y: 400} }"/>
+        <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 800, y: 400} }"/>
+        <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 600, y: 400} }"/>
       </div>
     </div>
   </div>
