@@ -30,7 +30,7 @@
         let maxY = this.line.p1.y > this.line.p2.y ? this.line.p1.y : this.line.p2.y;
         let minY = this.line.p1.y > this.line.p2.y ? this.line.p2.y : this.line.p1.y;
 
-        let dimension = { width: (maxX-minX), height: (maxY-minY)};
+        let dimension = { width: (maxX-minX + this.strokeWidth), height: (maxY-minY + this.strokeWidth)};
 
         return dimension;
       },
@@ -41,20 +41,20 @@
         let maxY = this.line.p1.y > this.line.p2.y ? this.line.p1.y : this.line.p2.y;
         let minY = this.line.p1.y > this.line.p2.y ? this.line.p2.y : this.line.p1.y;
 
-        return { x: minX + this.camera.x, y: minY + this.camera.y}
+        return { x: minX + this.camera.x - (this.strokeWidth/2), y: minY + this.camera.y - (this.strokeWidth/2)}
       },
       drawLine() {
         let dimension = this.calcDimensions();
 
-        let val1 = this.line.p1.x > this.line.p2.x ? dimension.width : 0;
-        let val3 = this.line.p1.x > this.line.p2.x ? this.line.p2.x : this.line.p1.x;
+        let val1 = this.line.p1.x > this.line.p2.x ? dimension.width - (this.strokeWidth/2) : 0 + (this.strokeWidth/2)
+        let val3 = this.line.p1.x > this.line.p2.x ? 0 + (this.strokeWidth/2) : (this.line.p2.x - this.line.p1.x + (this.strokeWidth/2));
 
-        let val2 = this.line.p1.y > this.line.p2.y ? this.line.p2.y : 0;
-        let val4 = this.line.p1.y > this.line.p2.y ? this.line.p2.y : this.line.p1.y;
+        let val2 = this.line.p1.y > this.line.p2.y ? dimension.height - (this.strokeWidth/2) : 0 + (this.strokeWidth/2);
+        let val4 = this.line.p1.y > this.line.p2.y ? 0 + (this.strokeWidth/2) : (this.line.p2.y - this.line.p1.y + (this.strokeWidth/2));
 
 
 
-        return 'M ' + val1 + ' ' + val2 + ' '+ (this.line.p2.x - this.line.p1.x) +' '+ (this.line.p2.y - this.line.p1.y);
+        return 'M ' + val1 + ' ' + val2 + ' ' + val3 + ' ' + val4;
         return "M 0 20 c 50 0 50 -5 80 -5";
       }
     },
@@ -64,34 +64,43 @@
         let dimension = this.calcDimensions();
 
         return {top: pos.y+'px', left: pos.x+'px', height: dimension.height+'px', width: dimension.width+'px'}
+      },
+      strokeWidth() {
+        if (this.line.strokeWidth) {
+          return this.line.strokeWidth;
+        } else {
+          return 4;
+        }
+      },
+      color() {
+        if (this.line.color) {
+          return this.line.color;
+        } else {
+          return "red";
+        }
       }
     }
   }
 </script>
 
 <template>
-  <svg id="svgtest33" :style>
+  <svg class="line" :style>
     <defs>
-      <marker id="circleRed" markerWidth="2" markerHeight="2" refX="1" refY="1">
-        <circle cx="1" cy="1" r="0.5" fill="red" />
-      </marker>
-      
-      <marker id="circleBlu" markerWidth="2" markerHeight="2" refX="1" refY="1">
-        <circle cx="1" cy="1" r="0.5" fill="cyan" />
-      </marker>
-      
-      <marker id="circleGreen" markerWidth="2" markerHeight="2" refX="1" refY="1">
-        <circle cx="1" cy="1" r="0.5" fill="lime" />
+      <marker :id="'circle'+this.line._id" markerWidth="2" markerHeight="2" refX="1" refY="1">
+        <circle cx="1" cy="1" r="0.5" :fill="color" />
       </marker>
     </defs>
 
     <!-- <path d="M 0 50 L 100 50" stroke="cyan" stroke-width="4" fill="none" /> -->
-    <path :d="drawLine()" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+    <path :d="drawLine()" :marker-start="'url(#circle'+this.line._id+')'" :marker-end="'url(#circle'+this.line._id+')'" :stroke="color" :stroke-width="strokeWidth" fill="none" />
   </svg>
 </template>
 
 <style>
-  #svgtest33 {
+  .line {
     position: absolute;
+
+    /* border: solid 1px black; */
+    /* z-index: 100; */
   }
 </style>

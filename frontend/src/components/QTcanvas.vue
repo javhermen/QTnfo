@@ -22,7 +22,7 @@
       QTline,
       QTcontextMenu
     },
-    mounted() {
+    beforeCreate() {
       axios
         .get('http://localhost:3050/api/QTnotes')
         .then(response => this.boxes = response.data)
@@ -44,6 +44,20 @@
       },
       stopCam() {
         this.dragging = false;
+      }
+    },
+    computed: {
+      line2() {
+        if (this.boxes) {
+          let x1 = this.boxes[0].position.x + 110;
+          let y1 = this.boxes[0].position.y + 50;
+  
+          let x2 = this.boxes[1].position.x - 10;
+          let y2 = this.boxes[1].position.y + 50;
+          return { _id: 'test2' , p1: { x: x1, y: y1 }, p2: { x: x2, y: y2}, strokeWidth: 4, color: 'green' };
+        }
+
+        return { _id: 'test2' , p1: { x: 2, y: 2 }, p2: { x: 2, y: 2}, strokeWidth: 4, color: 'green' };
       }
     }
   }
@@ -106,8 +120,36 @@
         </svg>
 
         <QTline :camera :line="{ p1: { x: 300, y: 300 }, p2: { x: 500, y: 400} }"/>
+
         <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 800, y: 400} }"/>
+        <QTline :camera :line="{ p1: { x: 600, y: 350 }, p2: { x: 800, y: 350} }"/>
         <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 600, y: 400} }"/>
+        <QTline :camera :line="{ p1: { x: 900, y: 400 }, p2: { x: 1100, y: 300} }"/>
+
+
+
+        <QTline :camera :line="{ p1: { x: 600, y: 100 }, p2: { x: 700, y: 200} }"/>
+        <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 800, y: 100} }"/>
+        <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 800, y: 300} }"/>
+        <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 600, y: 300} }"/>
+
+        <QTline :camera :line="{ p1: { x: 1000, y: 200 }, p2: { x: 1200, y: 200} }"/>
+        <QTline :camera :line="{ p1: { x: 1000, y: 100 }, p2: { x: 1200, y: 100} }"/>
+
+
+        <QTline :camera :line="{ p1: { x: 50, y: 50 }, p2: { x: 150, y: 150}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 50, y: 150 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/>
+
+        <QTline :camera :line="{ p1: { x: 50, y: 50 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 50, y: 50 }, p2: { x: 50, y: 150}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 150, y: 150 }, p2: { x: 50, y: 150}, strokeWidth: 4 }"/>
+        <!-- <QTline :camera :line="{ p1: { x: 150, y: 150 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/> -->
+
+
+        <QTline :camera :line="{ _id: 'test' , p1: { x: 700, y: 100 }, p2: { x: 700, y: 400}, strokeWidth: 4, color: 'cyan' }"/>
+
+
+        <QTline :camera :line="line2"/>
       </div>
     </div>
   </div>
