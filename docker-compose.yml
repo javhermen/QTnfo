@@ -6,9 +6,7 @@ services:
     ports:
       - "3000:5173"
     volumes:
-      - type: bind
-        source: ./frontend
-        target: /app
+      - ./frontend:/app
   mongodb:
     image: mongo:5
     volumes:
@@ -24,8 +22,6 @@ services:
     ports:
       - "3050:3050"
     volumes:
-      - type: bind
-        source: ./api-database
-        target: /app
+      - ./api-database:/app
 volumes:
   mongo_configdb:
