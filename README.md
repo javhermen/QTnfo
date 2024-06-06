@@ -16,3 +16,5 @@ https://macarthur.me/posts/options-for-removing-event-listeners/
 https://caniuse.com/?search=addEventListener
 
 https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-configure?view=sql-server-ver16&pivots=cs1-bash
+
+https://www.xataka.com/basics/mejores-24-apps-gratis-para-tablets-android-que-sacarle-maximo-partido-a-tuya?utm_source=pocket-newtab-es-es

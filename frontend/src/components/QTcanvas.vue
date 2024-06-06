@@ -100,53 +100,85 @@
             <marker id="circleGreen" markerWidth="2" markerHeight="2" refX="1" refY="1">
               <circle cx="1" cy="1" r="0.5" fill="lime" />
             </marker>
+
+            <marker id="circleBlack" markerWidth="2" markerHeight="2" refX="1" refY="1">
+              <circle cx="1" cy="1" r="0.5" fill="black" />
+            </marker>
           </defs>
 
           <!-- <path d="M 0 50 L 100 50" stroke="cyan" stroke-width="4" fill="none" /> -->
 
-          <path d="M 10 20 c 50 0 50 -5 80 -5" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
-          <path d="M 10 10 l 0 20" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
-          <path d="M 90 5 l 0 20" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+          <!-- <path d="M 10 20 c 50 0 50 -5 80 -5" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 10 10 l 0 20" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 90 5 l 0 20" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" /> -->
 
-          <path d="M 10 50 c 50 0 50 50 80 50" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+          <!-- <path d="M 10 50 c 40 0 40 50 80 50" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 10 50 C 75 50 25 100 90 100" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" /> -->
+          <path d="M 10 50 C 50 50 50 100 90 100" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+          <!-- <path d="M 10 50 C 65 50 35 100 90 100" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 10 50 C 75 50 25 100 90 100" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" /> -->
+          
+          <path d="M 50 50 50 50" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+          <path d="M 50 100 50 100" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+
+          <path d="M 65 50 65 50" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+          <path d="M 35 100 35 100" marker-start="url(#circleRed)" marker-end="url(#circleRed)" stroke="red" stroke-width="4" fill="none" />
+
+          <path d="M 50 75 50 75" marker-start="url(#circleBlack)" marker-end="url(#circleBlack)" stroke="black" stroke-width="4" fill="none" />
+          <path d="M 30 62.5 30 62.5" marker-start="url(#circleBlack)" marker-end="url(#circleBlack)" stroke="black" stroke-width="4" fill="none" />
+          <path d="M 70 87.5 70 87.5" marker-start="url(#circleBlack)" marker-end="url(#circleBlack)" stroke="black" stroke-width="4" fill="none" />
+
+          <path d="M 75 50 75 50" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="green" stroke-width="4" fill="none" />
+          <path d="M 25 100 25 100" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="green" stroke-width="4" fill="none" />
+
           <path d="M 0 40 l 0 20" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
-          <path d="M 100 90 l 0 20" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" />
+          <!-- <path d="M 100 90 l 0 20" marker-start="url(#circleBlu)" marker-end="url(#circleBlu)" stroke="cyan" stroke-width="4" fill="none" /> -->
 
-          <path d="M 10 80 c 50 0 50 100 80 100" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" />
-          <path d="M 10 70 l 0 20" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" />
-          <path d="M 90 170 l 0 20" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" />
+          <!-- <path d="M 10 80 c 50 0 50 100 80 100" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 10 70 l 0 20" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" /> -->
+          <!-- <path d="M 90 170 l 0 20" marker-start="url(#circleGreen)" marker-end="url(#circleGreen)" stroke="lime" stroke-width="4" fill="none" /> -->
           <!-- <path d="M 10 0 Q -10 50 10 100" stroke="cyan" fill="none" /> -->
           <!-- <path d="M 10 0 Q -25 50 10 100" stroke="cyan" fill="none" /> -->
         </svg>
 
         <QTline :camera :line="{ p1: { x: 300, y: 300 }, p2: { x: 500, y: 400} }"/>
 
-        <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 800, y: 400} }"/>
-        <QTline :camera :line="{ p1: { x: 600, y: 350 }, p2: { x: 800, y: 350} }"/>
-        <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 600, y: 400} }"/>
+        <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 800, y: 400}, straight: trues }"/>
+        <!-- <QTline :camera :line="{ p1: { x: 600, y: 350 }, p2: { x: 800, y: 350} }"/> -->
+        <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 600, y: 400}, straight: trues }"/>
+
+        <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 700, y: 350}, straight: true }"/>
+        <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 700, y: 350}, straight: true }"/>
+
         <QTline :camera :line="{ p1: { x: 900, y: 400 }, p2: { x: 1100, y: 300} }"/>
 
 
 
-        <QTline :camera :line="{ p1: { x: 600, y: 100 }, p2: { x: 700, y: 200} }"/>
-        <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 800, y: 100} }"/>
-        <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 800, y: 300} }"/>
-        <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 600, y: 300} }"/>
+        <!-- <QTline :camera :line="{ p1: { x: 600, y: 100 }, p2: { x: 700, y: 200} }"/> -->
+        <!-- <QTline :camera :line="{ p1: { x: 700, y: 200 }, p2: { x: 800, y: 100} }"/> -->
+
+        <QTline :camera :line="{ p1: { x: 705, y: 225 }, p2: { x: 710, y: 150} }"/>
+        <QTline :camera :line="{ p1: { x: 695, y: 225 }, p2: { x: 690, y: 150} }"/>
+        <QTline :camera :line="{ p1: { x: 710, y: 150 }, p2: { x: 800, y: 300} }"/>
+        <QTline :camera :line="{ p1: { x: 690, y: 150 }, p2: { x: 600, y: 300} }"/>
+
+        <QTline :camera :line="{ p1: { x: 700, y: 225 }, p2: { x: 800, y: 300} }"/>
+        <QTline :camera :line="{ p1: { x: 700, y: 225 }, p2: { x: 600, y: 300} }"/>
 
         <QTline :camera :line="{ p1: { x: 1000, y: 200 }, p2: { x: 1200, y: 200} }"/>
         <QTline :camera :line="{ p1: { x: 1000, y: 100 }, p2: { x: 1200, y: 100} }"/>
 
 
-        <QTline :camera :line="{ p1: { x: 50, y: 50 }, p2: { x: 150, y: 150}, strokeWidth: 4 }"/>
-        <QTline :camera :line="{ p1: { x: 50, y: 150 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 52, y: 52 }, p2: { x: 150, y: 150}, strokeWidth: 4, straight: true }"/>
+        <QTline :camera :line="{ p1: { x: 52, y: 148 }, p2: { x: 150, y: 50}, strokeWidth: 4, straight: true }"/>
 
-        <QTline :camera :line="{ p1: { x: 50, y: 50 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/>
-        <QTline :camera :line="{ p1: { x: 50, y: 50 }, p2: { x: 50, y: 150}, strokeWidth: 4 }"/>
-        <QTline :camera :line="{ p1: { x: 150, y: 150 }, p2: { x: 50, y: 150}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 55, y: 50 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 50, y: 55 }, p2: { x: 50, y: 145}, strokeWidth: 4 }"/>
+        <QTline :camera :line="{ p1: { x: 150, y: 150 }, p2: { x: 55, y: 150}, strokeWidth: 4 }"/>
         <!-- <QTline :camera :line="{ p1: { x: 150, y: 150 }, p2: { x: 150, y: 50}, strokeWidth: 4 }"/> -->
 
 
-        <QTline :camera :line="{ _id: 'test' , p1: { x: 700, y: 100 }, p2: { x: 700, y: 400}, strokeWidth: 4, color: 'cyan' }"/>
+        <!-- <QTline :camera :line="{ _id: 'test' , p1: { x: 700, y: 100 }, p2: { x: 700, y: 400}, strokeWidth: 4, color: 'cyan' }"/> -->
 
 
         <QTline :camera :line="line2"/>
