@@ -29,6 +29,8 @@ app.get('/api/:table', ApiController.router);
 
 app.post('/api/:table', ApiController.router);
 
+app.post('/api/refill', ApiController.refill);
+
 /*
 app.all('/api', ApiController.router);
 app.all('/api/:table', ApiController.router);

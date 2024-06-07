@@ -85,6 +85,37 @@ class ApiController {
         break;
     }
   }
+
+  static async refill(req, res) {
+    const { method, params, body } = req;
+    const { table, id } = params;
+
+
+    switch (method) {
+      case "GET":
+        if (table) {
+          TableController.getAll(res, table);
+        } else {
+          res.json(ApiController.JSON_HELP);
+        }
+        break;
+
+      case "POST":
+        if (table) {
+          TableController.insert(res, table, body);
+        }
+        break;
+
+      case "PUT":
+        break;
+
+      case "DELETE":
+        break;
+    
+      default:
+        break;
+    }
+  }
 }
 
 module.exports = ApiController;

@@ -57,7 +57,6 @@
         middleX = middleX < 0 ? -middleX + this.strokeWidth : middleX;
 
         return this.line.straight ? 'M ' + val1 + ' ' + val2 + ' ' + val3 + ' ' + val4 : 'M ' + val1 + ' ' + val2 + ' C ' + middleX + ' ' + val2 + ' ' + middleX + ' ' + val4 + ' ' + val3 + ' ' + val4;
-        return "M 0 20 c 50 0 50 -5 80 -5";
       },
       drawDot() {
         let dimension = this.calcDimensions();
@@ -74,7 +73,6 @@
         middleX = middleX < 0 ? -middleX + this.strokeWidth/2 : middleX + this.strokeWidth/2;
 
         return 'M ' + middleX + ' ' + val2 + ' ' + middleX + ' ' + val4;
-        return "M 0 20 c 50 0 50 -5 80 -5";
       },
       drawConnector() {
         let dimension = this.calcDimensions();
