@@ -12,10 +12,15 @@
 </script>
 
 <template>
-  <li>
+  <li class="link">
     <!-- <a href="vier"> -->
-    <RouterLink :to="link"><slot>0</slot></RouterLink>
+    <RouterLink class="thistest" :to="link">
+      <slot>
+        <img src="/home-icon.png" alt="">
+      </slot>
+    </RouterLink>
     <!-- <img src="/001-a.png" alt=""> -->
+    
     <!-- </a> -->
   </li>
 </template>
@@ -23,7 +28,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-  li {
+  li.link {
     width: 75px;
     height: 75px;
     height: 65px;
@@ -37,7 +42,7 @@
     padding-bottom: 0px;
   }
 
-  a {
+  li.link>a {
 
     font-family: "Share Tech Mono", monospace;
     font-weight: 400;
@@ -69,7 +74,8 @@
     background-size: cover;
   }
 
-  img {
-    width: 100%;
+  li.link>a>img {
+    width: 85%;
+    padding-top: 5%;
   }
 </style>

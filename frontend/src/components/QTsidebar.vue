@@ -6,9 +6,8 @@
   <aside>
     <div class="aside">
       <ul>
-        <QTbuttonSidebar link="/">2</QTbuttonSidebar>
+        <QTbuttonSidebar link="/vier">2</QTbuttonSidebar>
         <QTbuttonSidebar link="/phone">3</QTbuttonSidebar>
-        <QTbuttonSidebar>4</QTbuttonSidebar>
       </ul>
     </div>
   </aside>
@@ -25,7 +24,7 @@
   }
 
   .aside {
-    background-color: rgb(43, 48, 54);
+    background-color: var(--color-container-background);
     height: 100%;
     
     margin: 15px;

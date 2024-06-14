@@ -54,7 +54,20 @@ class ApiController {
     }
   }
   */
+  static async help(req, res) {
+    res.json(ApiController.JSON_HELP);
+  }
 
+
+  static async getAllNotebooks(req, res) {
+    TableController.getAll(res, 'QTnotebooks');
+  }
+
+  static async getAllnotebooksPopulated(req, res) {
+    console.log(req.url);
+    res.json(req.url);
+  }
+  /*
   static async router(req, res) {
     const { method, params, body } = req;
     const { table, id } = params;
@@ -85,36 +98,10 @@ class ApiController {
         break;
     }
   }
+  */
 
   static async refill(req, res) {
-    const { method, params, body } = req;
-    const { table, id } = params;
-
-
-    switch (method) {
-      case "GET":
-        if (table) {
-          TableController.getAll(res, table);
-        } else {
-          res.json(ApiController.JSON_HELP);
-        }
-        break;
-
-      case "POST":
-        if (table) {
-          TableController.insert(res, table, body);
-        }
-        break;
-
-      case "PUT":
-        break;
-
-      case "DELETE":
-        break;
-    
-      default:
-        break;
-    }
+    TableController.refill(res);
   }
 }
 

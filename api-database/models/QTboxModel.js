@@ -3,9 +3,8 @@ const mongoose = require ('mongoose');
 const Schema = mongoose.Schema;
 
 
-const QTnoteSchema = new Schema ({
-  type: { type: String },
-  info: { type: String },
+const QTboxSchema = new Schema ({
+  title: { type: String },
   pos: {
     x: { type: Number },
     y: { type: Number },
@@ -14,9 +13,10 @@ const QTnoteSchema = new Schema ({
   dimensions: {
     width: { type: Number },
     height: { type: Number }
-  }
+  },
+  QTnotes: [{ type: Schema.Types.ObjectId, ref: 'QTnote' }]
 });
 
-const QTnote = mongoose.model('QTnote', QTnoteSchema);
+const QTbox = mongoose.model('QTbox', QTboxSchema);
 
-module.exports = QTnote;
+module.exports = QTbox;

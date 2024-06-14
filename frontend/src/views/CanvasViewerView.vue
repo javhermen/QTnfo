@@ -1,7 +1,15 @@
-<script setup>
+<script>
   import QTheader from '../components/QTheader.vue'
   import QTsidebar from '../components/QTsidebar.vue'
   import QTcanvas from '../components/QTcanvas.vue'
+
+  export default {
+    components: {
+      QTheader,
+      QTsidebar,
+      QTcanvas
+    }
+  }
 </script>
 
 <template>

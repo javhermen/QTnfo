@@ -6,7 +6,7 @@
   <header>
     <div class="header">
       <ul>
-        <QTbuttonSidebar link="/vier">1</QTbuttonSidebar>
+        <QTbuttonSidebar link="/"></QTbuttonSidebar>
       </ul>
     </div>
   </header>
@@ -19,7 +19,7 @@
   }
 
   .header {
-    background-color: rgb(43, 48, 54);
+    background-color: var(--color-container-background);
     width: 100%;
     
     margin: 15px;

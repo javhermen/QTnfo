@@ -24,17 +24,36 @@ app.get('/api/:table/id/:id', ApiController.router);
 app.post('/api/:table', ApiController.router);
 */
 
+/*
 app.get('/api', ApiController.router);
 app.get('/api/:table', ApiController.router);
 
 app.post('/api/:table', ApiController.router);
 
 app.post('/api/refill', ApiController.refill);
+*/
+
+app.get('/api', ApiController.help);
+
+app.get('/api/QTnotebooks', ApiController.getAllNotebooks);
+app.get('/api/QTnotebooks/populated', ApiController.getAllnotebooksPopulated);
+
+
+app.get('/api/refill', ApiController.refill);
+// app.get('/api/all/notebooks/names', ApiController.notebooks);
 
 /*
 app.all('/api', ApiController.router);
 app.all('/api/:table', ApiController.router);
 app.all('/api/:table/id/:id', ApiController.router);
+*/
+
+/*
+app.get('/api', ApiController.router);
+app.get('/api/user/:user/:pass', ApiController.router);
+app.get('/api/pages', ApiController.router);
+app.get('/api/pages/count', ApiController.router);
+app.get('/api/page/:id', ApiController.router);
 */
 
 // Start the server

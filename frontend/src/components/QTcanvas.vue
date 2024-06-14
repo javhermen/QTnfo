@@ -25,7 +25,8 @@
     beforeCreate() {
       axios
         .get('http://localhost:3050/api/QTnotes')
-        .then(response => this.boxes = response.data)
+        // .then(response => this.boxes = response.data);
+        .then(response => console.log(response.data));
     },
     methods: {
       showQTcontextMenu(event) {
@@ -143,9 +144,9 @@
 
         <QTline :camera :line="{ p1: { x: 300, y: 300 }, p2: { x: 500, y: 400} }"/>
 
-        <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 800, y: 400}, straight: trues }"/>
+        <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 800, y: 400}}"/>
         <!-- <QTline :camera :line="{ p1: { x: 600, y: 350 }, p2: { x: 800, y: 350} }"/> -->
-        <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 600, y: 400}, straight: trues }"/>
+        <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 600, y: 400}}"/>
 
         <QTline :camera :line="{ p1: { x: 600, y: 300 }, p2: { x: 700, y: 350}, straight: true }"/>
         <QTline :camera :line="{ p1: { x: 800, y: 300 }, p2: { x: 700, y: 350}, straight: true }"/>
@@ -217,7 +218,7 @@
     width: 100%;
     height: 100%;
 
-    background-color: rgb(43, 48, 54);
+    background-color: var(--color-container-background);
 
     /* background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%); */
 
@@ -228,33 +229,6 @@
     overflow: hidden;
 
     position: relative;
-  }
-
-  div#main canvas.int {
-    background-color: rgb(43, 48, 54);
-
-    /* background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%); */
-
-    box-shadow: inset 0px 0px 20px 2px ;
-
-    border-radius: 10px;
-
-    width: 100%;
-    height: 100%;
-
-    /* width: 1780px; */
-    /* height: 430px; */
-
-    /* width: calc(100%); */
-    /* height: calc(100% - 30px); */
-    /* height: 50%; */
-
-    /* display: block; */
-
-    position: absolute;
-
-    /* top: 0; */
-    
   }
 
   #svgtest {
