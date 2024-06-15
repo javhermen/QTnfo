@@ -64,8 +64,7 @@ class ApiController {
   }
 
   static async getAllnotebooksPopulated(req, res) {
-    console.log(req.url);
-    res.json(req.url);
+    TableController.getAllnotebooksPopulated(res);
   }
   /*
   static async router(req, res) {
@@ -102,6 +101,14 @@ class ApiController {
 
   static async refill(req, res) {
     TableController.refill(res);
+  }
+
+  static async unfill(req, res) {
+    TableController.unfill(res);
+  }
+
+  static async reset(req, res) {
+    TableController.reset(res);
   }
 }
 

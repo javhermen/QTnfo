@@ -3,17 +3,27 @@
     data() {
       return {
       }
+    },
+    props: {
+      notebook: Object,
+    },
+    computed: {
+      style() {
+        return {
+          backgroundColor: this.notebook.color
+        }
+      }
     }
   }
 </script>
 
 <template>
-  <a id="notebook">
+  <a id="notebook" :style>
     <div class="int">
       <div class="title">
         <!-- <h1>Book of horrors test test test test test test test test</h1> -->
         <!-- <h1>Book of horrors test</h1> -->
-        <h1>Notebook</h1>
+        <h1>{{ this.notebook.name }}</h1>
         <!-- <h1>Book</h1> -->
       </div>
       <div class="image">
@@ -38,7 +48,7 @@
     display: flex;
 
     /* background-color: var(--color-background); */
-    background-color: rgb(100, 100, 255);
+    /* background-color: #6464ff; */
     /* background-color: rgb(0, 0, 95); */
 
     border-radius: 10px 5px 5px 10px;

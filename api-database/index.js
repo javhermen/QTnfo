@@ -14,6 +14,10 @@ app.use(bodyParser.json());
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://Quote:etouQ@mongodb:27017/QTnfo?authSource=admin');
 
+/*
+docker exec -it qtnfo-mongodb-1 bash
+mongosh "mongodb://Quote:etouQ@localhost/QTnfo?authSource=admin"
+*/
 
 // Routes
 /*
@@ -39,7 +43,9 @@ app.get('/api/QTnotebooks', ApiController.getAllNotebooks);
 app.get('/api/QTnotebooks/populated', ApiController.getAllnotebooksPopulated);
 
 
-app.get('/api/refill', ApiController.refill);
+app.get('/api/reset', ApiController.reset);
+// app.get('/api/refill', ApiController.refill);
+// app.get('/api/unfill', ApiController.unfill);
 // app.get('/api/all/notebooks/names', ApiController.notebooks);
 
 /*

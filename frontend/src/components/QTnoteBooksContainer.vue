@@ -1,16 +1,18 @@
 <script>
   import QTcontextMenu from './Menus/QTcontextMenu.vue'
   import QTnotebook from './QTnotebook.vue'
+  import axios from 'axios';
 
   export default {
     data() {
       return {
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
-        notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],
+        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12],
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11],
+        notebooks: null,
         showContextMenu: false,
         contextMenuX: 0,
         contextMenuY: 0
@@ -19,6 +21,11 @@
     components: {
       QTcontextMenu,
       QTnotebook
+    },
+    beforeCreate() {
+      axios
+        .get('http://localhost:3050/api/QTnotebooks')
+        .then(response => this.notebooks = response.data);
     },
     methods: {
       showQTcontextMenu(event) {
@@ -35,7 +42,7 @@
     <div class="int">
       <ul class="notebooks">
         <li v-for="notebook in notebooks">
-          <QTnotebook />
+          <QTnotebook :notebook />
         </li>
       </ul>
     </div>

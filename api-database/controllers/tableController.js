@@ -1,3 +1,5 @@
+const QTnotebook = require('../models/QTnotebookModel');
+
 class TableController {
   static getModel(table) {
     switch (table) {
@@ -33,6 +35,33 @@ class TableController {
       this.errorHandler(res, error);
 		}
 	}
+
+  static async getAllnotebooksPopulated(res) {
+		try {
+      let model = this.getModel('QTnotebooks');
+      this.getModel('QTpages');
+      this.getModel('QTboxes');
+      this.getModel('QTnotes');
+      this.getModel('QTconnections');
+      
+      let data = await model.find().populate({
+        path: 'QTpages',
+        populate: [{
+          path: 'QTboxes',
+          populate: { path: 'QTnotes' },
+        },
+        {
+          path: 'QTconnections'
+        }]
+      });
+
+      res.json(data);
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+  }
 
 	static async getByID(res, table, id) {
 		try {
@@ -150,7 +179,7 @@ class TableController {
       let QTnotebookModel = this.getModel('QTnotebooks');
       let QTnotebook = new QTnotebookModel({
         name: 'noteboook',
-        pages: [QTpage._id]
+        QTpages: [QTpage._id]
       });
 
 
@@ -168,6 +197,140 @@ class TableController {
       console.log(error);
       this.errorHandler(res, error);
 		}
+	}
+
+
+  static async unfill(res) {
+    try {
+      let QTnoteModel = this.getModel('QTnotes');
+      let QTboxModel = this.getModel('QTboxes');
+      let QTconnectionModel = this.getModel('QTconnections');
+      let QTpageModel = this.getModel('QTpages');
+      let QTnotebookModel = this.getModel('QTnotebooks');
+
+      let QTnote = await QTnoteModel.deleteMany({});
+      let QTbox = await QTboxModel.deleteMany({});
+      let QTconnection = await QTconnectionModel.deleteMany({});
+      let QTpage = await QTpageModel.deleteMany({});
+      let QTnotebook = await QTnotebookModel.deleteMany({});
+
+      res.json({unfilled: 'true'});
+    }
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+    }
+	}
+
+
+  static async reset(res) {
+    try {
+      let QTnoteModel = this.getModel('QTnotes');
+      let QTboxModel = this.getModel('QTboxes');
+      let QTconnectionModel = this.getModel('QTconnections');
+      let QTpageModel = this.getModel('QTpages');
+      let QTnotebookModel = this.getModel('QTnotebooks');
+
+      let QTnoteDeleted = await QTnoteModel.deleteMany({});
+      let QTboxDeleted = await QTboxModel.deleteMany({});
+      let QTconnectionDeleted = await QTconnectionModel.deleteMany({});
+      let QTpageDeleted = await QTpageModel.deleteMany({});
+      let QTnotebookDeleted = await QTnotebookModel.deleteMany({});
+
+
+      let QTnote1 = new QTnoteModel({
+        type: 'text',
+        info: 'hello1',
+        pos: {
+          x: 50,
+          y: 50,
+          z: 2
+        },
+        dimensions: {
+          width: 100,
+          height: 100
+        }
+      });
+
+      let QTnote2 = new QTnoteModel({
+        type: 'text',
+        info: 'hello2',
+        pos: {
+          x: 50,
+          y: 50,
+          z: 2
+        },
+        dimensions: {
+          width: 100,
+          height: 100
+        }
+      });
+
+      
+      let QTbox1 = new QTboxModel({
+        title: 'testHead1',
+        pos: {
+          x: 50,
+          y: 50,
+          z: 2
+        },
+        dimensions: {
+          width: 200,
+          height: 200
+        },
+        QTnotes: [QTnote1._id]
+      });
+      
+      let QTbox2 = new QTboxModel({
+        title: 'testHead2',
+        pos: {
+          x: 250,
+          y: 250,
+          z: 3
+        },
+        dimensions: {
+          width: 200,
+          height: 200
+        },
+        QTnotes: [QTnote2._id]
+      });
+
+
+      let QTconnection = new QTconnectionModel({
+        QTboxID1: QTbox1._id,
+        QTboxID2: QTbox2._id
+      });
+
+
+      let QTpage = new QTpageModel({
+        name: 'pageNameNum',
+        QTboxes: [QTbox1._id, QTbox2._id],
+        QTconnections: [QTconnection._id]
+      });
+      
+
+      let QTnotebook = new QTnotebookModel({
+        name: 'noteboook',
+        color: '#6464ff',
+        QTpages: [QTpage._id]
+      });
+
+
+      QTnote1.save();
+      QTnote2.save();
+      QTbox1.save();
+      QTbox2.save();
+      QTconnection.save();
+      QTpage.save();
+      QTnotebook.save();
+
+
+      res.json({reseted: 'true'});
+    }
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+    }
 	}
 
 
