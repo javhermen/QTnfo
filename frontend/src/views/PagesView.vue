@@ -2,14 +2,14 @@
   import QTheader from '../components/QTheader.vue'
   import QTsidebar from '../components/QTsidebar.vue'
   import QTcanvas from '../components/QTcanvas.vue'
-  import QTnotebooksContainer from '../components/QTnotebooksContainer.vue'
+  import QTpagesContainer from '../components/QTpagesContainer.vue'
 
   export default {
     components: {
       QTheader,
       QTsidebar,
       QTcanvas,
-      QTnotebooksContainer
+      QTpagesContainer
     }
   }
 </script>
@@ -19,7 +19,7 @@
     <QTheader />
     <div class="wrapper">
       <QTsidebar />
-      <QTnotebooksContainer />
+      <QTpagesContainer />
     </div>
   </div>
 </template>

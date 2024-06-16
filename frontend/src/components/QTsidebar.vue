@@ -6,8 +6,8 @@
   <aside>
     <div class="aside">
       <ul>
-        <QTbuttonSidebar link="/vier">2</QTbuttonSidebar>
-        <QTbuttonSidebar link="/phone">3</QTbuttonSidebar>
+        <QTbuttonSidebar link="/vier">1</QTbuttonSidebar>
+        <QTbuttonSidebar link="/phone">2</QTbuttonSidebar>
       </ul>
     </div>
   </aside>

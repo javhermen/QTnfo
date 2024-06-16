@@ -7,32 +7,39 @@
       }
     },
     props: {
-      notebook: Object,
+      page: Object,
     },
     computed: {
       style() {
         return {
-          backgroundColor: this.notebook.color
+          backgroundColor: this.color
         }
       },
+      color() {
+        return this.page.color ? this.page.color : '#999999'
+      },
       url() {
-        if (this.notebook.static) {
-          return 'new_notebook';
+        let url = '/'+this.$route.params.QTnotebook+'/';
+
+        if (this.page.static) {
+          url += 'new_page';
         } else {
-          return this.notebook.name;
+          url += this.page.name;
         }
+
+        return url;
       }
     }
   }
 </script>
 
 <template>
-  <RouterLink class="notebook" :to="url" :style >
+  <RouterLink class="page" :to="url" :style >
     <div class="int">
       <div class="title">
         <!-- <h1>Book of horrors test test test test test test test test</h1> -->
         <!-- <h1>Book of horrors test</h1> -->
-        <h1>{{ this.notebook.name }}</h1>
+        <h1>{{ this.page.name }}</h1>
         <!-- <h1>Book</h1> -->
       </div>
       <div class="image">
@@ -56,7 +63,7 @@
     text-decoration: none;
   }
 
-  a.notebook {
+  a.page {
     width: 100%;
     height: 100%;
 
@@ -70,12 +77,12 @@
     transition: transform 1s;
   }
 
-  a.notebook:hover {
+  a.page:hover {
     transition: transform 0.2s;
     transform: scale(1.05);
   }
 
-  a.notebook::before {
+  a.page::before {
     content: "";
 
     width: 3px;
@@ -88,7 +95,7 @@
     border-radius: 5px 5px 5px 5px;
   }
 
-  a.notebook>div.int {
+  a.page>div.int {
     width: calc(100% - (33px + 15px));
     height: 100%;
     display: flex;
@@ -96,14 +103,14 @@
     flex-direction: column;
   }
 
-  a.notebook>div.int>div.title>h1 {
+  a.page>div.int>div.title>h1 {
     max-height: 60px;
     /* overflow: hidden; */
 
     line-height: 1em;
   }
 
-  a.notebook>div.int>div.title {
+  a.page>div.int>div.title {
     text-align: center;
     align-content: center;
     height: 80px;
@@ -111,7 +118,7 @@
     overflow: hidden;
   }
 
-  a.notebook>div.int>div.image {
+  a.page>div.int>div.image {
     width: calc(100%);
     /* height: calc(100% - 80px); */
     height: 173.33px;
@@ -126,7 +133,7 @@
     /* display: flex */
   }
 
-  a.notebook>div.int>div.image>img {
+  a.page>div.int>div.image>img {
     width: 100%;
     height: 100%;
     /* height: 70%; */

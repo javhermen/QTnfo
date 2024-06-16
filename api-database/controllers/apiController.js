@@ -66,6 +66,11 @@ class ApiController {
   static async getAllnotebooksPopulated(req, res) {
     TableController.getAllnotebooksPopulated(res);
   }
+
+  static async getNotebookPages(req, res) {
+    const { QTnotebook } = req.params;
+    TableController.getNotebookPages(res, QTnotebook);
+  }
   /*
   static async router(req, res) {
     const { method, params, body } = req;

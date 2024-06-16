@@ -1,5 +1,3 @@
-const QTnotebook = require('../models/QTnotebookModel');
-
 class TableController {
   static getModel(table) {
     switch (table) {
@@ -32,6 +30,7 @@ class TableController {
       res.json(data);
 		}
     catch (error) {
+      console.log(error);
       this.errorHandler(res, error);
 		}
 	}
@@ -63,23 +62,15 @@ class TableController {
 		}
   }
 
-	static async getByID(res, table, id) {
+  static async getNotebookPages(res, QTnotebook) {
 		try {
-      const data = await TableModel.getByID(table, id);
-
-      if (data) {
-        res.json(data);
-      }
-      else {
-        res.status(400).json({
-          response: 'ID not found on the table',
-          error: 'ID_NOT_FOUND',
-          id: id,
-          table: table
-        });
-      }
+      let model = this.getModel('QTnotebooks');
+      this.getModel('QTpages');
+      const data = await model.findOne({ name: QTnotebook }, 'QTpages').populate('QTpages');
+      res.json(data.QTpages);
 		}
     catch (error) {
+      console.log(error);
       this.errorHandler(res, error);
 		}
 	}
@@ -310,7 +301,7 @@ class TableController {
       
 
       let QTnotebook = new QTnotebookModel({
-        name: 'noteboook',
+        name: 'notebook',
         color: '#6464ff',
         QTpages: [QTpage._id]
       });
@@ -341,7 +332,7 @@ class TableController {
       res.status(400).json({response: 'The table does not exist', error: errorCode});
     }
     else {
-      res.status(500).json({response: 'Internal Server Error', error});
+      res.status(500).json({response: 'Internal Server Error', error: error});
     }
   }
 }

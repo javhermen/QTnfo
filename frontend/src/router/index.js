@@ -9,13 +9,21 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/settings',
+      name: 'settings',
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/:notebook',
+      path: '/new_notebook',
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/:QTnotebook/new_page',
+      component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/:QTnotebook',
+      component: () => import('../views/PagesView.vue')
     },
     {
       path: '/:notebook/:page',
