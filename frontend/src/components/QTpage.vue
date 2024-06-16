@@ -24,6 +24,7 @@
         if (this.page.static) {
           url += 'new_page';
         } else {
+          // url += this.page._id;
           url += this.page.name;
         }
 

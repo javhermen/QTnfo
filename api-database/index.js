@@ -42,7 +42,7 @@ app.get('/api', ApiController.help);
 app.get('/api/QTnotebooks', ApiController.getAllNotebooks);
 app.get('/api/QTnotebooks/populated', ApiController.getAllnotebooksPopulated);
 app.get('/api/:QTnotebook/QTpages', ApiController.getNotebookPages);
-// app.get('/api/:QTnotebook/:QTpage', ApiController.getNotebookPage);
+app.get('/api/:QTnotebook/:QTpage', ApiController.getNotebookPage);
 
 // app.get('/api/:QTnotebook/:QTpage', ApiController.getPageBoxes);
 

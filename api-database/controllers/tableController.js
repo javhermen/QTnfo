@@ -75,6 +75,36 @@ class TableController {
 		}
 	}
 
+  static async getNotebookPage(res, QTnotebook, QTpage) {
+		try {
+      let model = this.getModel('QTnotebooks');
+      this.getModel('QTpages');
+      this.getModel('QTboxes');
+      this.getModel('QTnotes');
+      this.getModel('QTconnections');
+
+      const data = await model
+        .findOne({ name: QTnotebook }, 'QTpages')
+        .populate({
+          path: 'QTpages',
+          match: { name: QTpage },
+          populate: [{
+            path: 'QTboxes',
+            populate: { path: 'QTnotes' },
+          },
+          {
+            path: 'QTconnections'
+          }]
+        });
+
+      res.json(data.QTpages[0]);
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
   static async insert(res, table, body) {
     try {
       let model = this.getModel(table);

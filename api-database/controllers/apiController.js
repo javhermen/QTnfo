@@ -71,6 +71,11 @@ class ApiController {
     const { QTnotebook } = req.params;
     TableController.getNotebookPages(res, QTnotebook);
   }
+
+  static async getNotebookPage(req, res) {
+    const { QTnotebook, QTpage } = req.params;
+    TableController.getNotebookPage(res, QTnotebook, QTpage);
+  }
   /*
   static async router(req, res) {
     const { method, params, body } = req;
