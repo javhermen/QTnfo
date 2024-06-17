@@ -6,7 +6,7 @@
   <aside>
     <div class="aside">
       <ul>
-        <QTbuttonSidebar link="/vier">1</QTbuttonSidebar>
+        <QTbuttonSidebar link="/notebook/pageNameNum">1</QTbuttonSidebar>
         <QTbuttonSidebar link="/phone">2</QTbuttonSidebar>
       </ul>
     </div>
@@ -36,6 +36,8 @@
     border-radius: 15px;
 
     padding-bottom: 10px;
+
+    box-shadow: black inset 0px 0px 10px 2px;
   }
 
   ul {

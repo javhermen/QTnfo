@@ -14,9 +14,9 @@ export default {
   computed: {
     style() {
       return {
-        left: this.box.position.x + this.camera.x+'px',
-        top: this.box.position.y + this.camera.y+'px',
-        zIndex: this.box.position.z,
+        left: this.box.pos.x + this.camera.x+'px',
+        top: this.box.pos.y + this.camera.y+'px',
+        zIndex: this.box.pos.z,
         width: this.box.dimensions.width+'px',
         height: this.box.dimensions.height+'px'
       }
@@ -24,8 +24,8 @@ export default {
   },
   methods: {
     drag() {
-      this.tempX = this.box.position.x;
-      this.tempY = this.box.position.y;
+      this.tempX = this.box.pos.x;
+      this.tempY = this.box.pos.y;
       document.addEventListener("mousemove", this.updatePos);
       document.addEventListener("mouseup", this.stopDrag);
     },
@@ -38,8 +38,8 @@ export default {
       this.tempY = e.movementY + this.tempY;
 
       
-      this.box.position.x = ((this.tempX/10).toFixed(0)) * 10;
-      this.box.position.y = ((this.tempY/10).toFixed(0)) * 10;
+      this.box.pos.x = ((this.tempX/10).toFixed(0)) * 10;
+      this.box.pos.y = ((this.tempY/10).toFixed(0)) * 10;
       // this.box.position.y = e.movementY + this.box.position.y;
     }
   }
@@ -50,10 +50,11 @@ export default {
 
 
 <template>
-  <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag">
+  <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', 'QTbox('+this.box._id+')')" @mouseleave="$emit('leaved', 'canvas')">
   <!-- <div :id="box._id" class="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="drag"> -->
-    <p>X: {{ box.position.x }}</p>
-    <p>Y: {{ box.position.y }}</p>
+    <h1>{{ box.title }}</h1>
+    <p>X: {{ box.pos.x }}</p>
+    <p>Y: {{ box.pos.y }}</p>
   </div>
 </template>
 

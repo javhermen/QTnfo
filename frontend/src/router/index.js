@@ -26,12 +26,7 @@ const router = createRouter({
       component: () => import('../views/PagesView.vue')
     },
     {
-      path: '/:notebook/:page',
-      component: () => import('../views/CanvasViewerView.vue')
-    },
-    {
-      path: '/vier',
-      name: 'canvas',
+      path: '/:QTnotebook/:QTpage',
       component: () => import('../views/CanvasViewerView.vue')
     },
     {

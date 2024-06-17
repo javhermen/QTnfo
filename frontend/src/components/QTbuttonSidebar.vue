@@ -28,6 +28,12 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
+  a:-webkit-any-link {
+    color: var(--color-text);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
   li.link {
     width: 75px;
     height: 75px;
