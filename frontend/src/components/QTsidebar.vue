@@ -38,6 +38,8 @@
     padding-bottom: 10px;
 
     box-shadow: black inset 0px 0px 10px 2px;
+
+    position: relative;
   }
 
   ul {

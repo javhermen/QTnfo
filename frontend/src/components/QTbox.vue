@@ -1,60 +1,76 @@
 <script>
 
-export default {
-  data() {
-    return {
-      tempX: 50,
-      tempY: 50
-    }
-  },
-  props: {
-    box: Object,
-    camera: Object
-  },
-  computed: {
-    style() {
+  import QTbackground from './QTbackground.vue'
+  import QTnote from './QTnote.vue'
+
+  export default {
+    data() {
       return {
-        left: this.box.pos.x + this.camera.x+'px',
-        top: this.box.pos.y + this.camera.y+'px',
-        zIndex: this.box.pos.z,
-        width: this.box.dimensions.width+'px',
-        height: this.box.dimensions.height+'px'
+        tempX: 50,
+        tempY: 50
+      }
+    },
+    components: {
+      QTbackground,
+      QTnote
+    },
+    props: {
+      box: Object,
+      camera: Object
+    },
+    computed: {
+      style() {
+        return {
+          left: this.box.pos.x + this.camera.x+'px',
+          top: this.box.pos.y + this.camera.y+'px',
+          zIndex: this.box.pos.z,
+          width: this.box.dimensions.width+'px',
+          height: this.box.dimensions.height+'px'
+        }
+      }
+    },
+    methods: {
+      drag() {
+        this.tempX = this.box.pos.x;
+        this.tempY = this.box.pos.y;
+        document.addEventListener("mousemove", this.updatePos);
+        document.addEventListener("mouseup", this.stopDrag);
+      },
+      stopDrag() {
+        document.removeEventListener("mousemove", this.updatePos);
+        document.removeEventListener("mouseup", this.stopDrag);
+      },
+      updatePos(e) {
+        this.tempX = e.movementX + this.tempX;
+        this.tempY = e.movementY + this.tempY;
+
+        
+        this.box.pos.x = ((this.tempX/10).toFixed(0)) * 10;
+        this.box.pos.y = ((this.tempY/10).toFixed(0)) * 10;
       }
     }
-  },
-  methods: {
-    drag() {
-      this.tempX = this.box.pos.x;
-      this.tempY = this.box.pos.y;
-      document.addEventListener("mousemove", this.updatePos);
-      document.addEventListener("mouseup", this.stopDrag);
-    },
-    stopDrag() {
-      document.removeEventListener("mousemove", this.updatePos);
-      document.removeEventListener("mouseup", this.stopDrag);
-    },
-    updatePos(e) {
-      this.tempX = e.movementX + this.tempX;
-      this.tempY = e.movementY + this.tempY;
-
-      
-      this.box.pos.x = ((this.tempX/10).toFixed(0)) * 10;
-      this.box.pos.y = ((this.tempY/10).toFixed(0)) * 10;
-      // this.box.position.y = e.movementY + this.box.position.y;
-    }
   }
-}
 
 </script>
 
 
 
 <template>
-  <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', 'QTbox('+this.box._id+')')" @mouseleave="$emit('leaved', 'canvas')">
-  <!-- <div :id="box._id" class="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="drag"> -->
-    <h1>{{ box.title }}</h1>
-    <p>X: {{ box.pos.x }}</p>
-    <p>Y: {{ box.pos.y }}</p>
+  <div :id="box._id" class="box" :style @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')">
+  <!-- <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')"> -->
+    <h1 @mouseenter="$emit('entered', { object: 'tittle' })" @mouseleave="$emit('leaved')">{{ box.title }}</h1>
+
+    <div style="overflow: hidden; position: relative;">
+      <QTnote v-for="note in box.QTnotes" :note :key="note._id" @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
+
+      <QTbackground />
+    </div>
+
+    <svg width="15px" height="15px" style="cursor: nw-resize; position: absolute; bottom: 0px; right: 0px;" @mouseenter="$emit('entered', { object: 'resizer' })" @mouseleave="$emit('leaved')">
+      <circle fill="rgba(255, 255, 255, 0.2)" cx="10" cy="2" r="1.5" />
+      <circle fill="rgba(255, 255, 255, 0.2)" cx="7" cy="7" r="1.5" />
+      <circle fill="rgba(255, 255, 255, 0.2)" cx="2" cy="10" r="1.5" />
+    </svg>
   </div>
 </template>
 
@@ -75,6 +91,29 @@ export default {
     /* box-shadow: inset 0px 0px 25px -15px aqua; */
     box-shadow: inset 0px 0px 25px -15px rgb(0, 0, 0);
     /* box-shadow: inset 10px -10px 25px -15px rgb(0, 0, 0); */
+  }
+
+  .box>div {
+    position: relative;
+
+    margin-left: 10px;
+
+    width: 90%;
+
+    height: 150px;
+
+    background-color: var(--color-container-background);
+    
+    filter: brightness(1.2);
+
+    box-shadow: rgba(0, 0, 0, 0.2) inset 0px 0px 10px 2px;
+
+    border-radius: 10px;
+  }
+
+  .box>h1 {
+    text-align: center;
+    user-select: none;
   }
 
   p {

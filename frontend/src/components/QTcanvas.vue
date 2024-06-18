@@ -2,6 +2,7 @@
   import QTbox from './QTbox.vue'
   import QTline from './QTline.vue'
   import QTcontextMenu from './Menus/QTcontextMenu.vue'
+  import QTbackground from './QTbackground.vue'
   import axios from 'axios';
 
   export default {
@@ -15,13 +16,14 @@
         showContextMenu: false,
         contextMenuX: 0,
         contextMenuY: 0,
-        hoveringOver: 'nothing'
+        hoveringOver: []
       }
     },
     components: {
       QTbox,
       QTline,
-      QTcontextMenu
+      QTcontextMenu,
+      QTbackground
     },
     beforeCreate() {
       axios
@@ -46,11 +48,25 @@
       stopCam() {
         this.dragging = false;
       },
+      move(event) {
+        let lastHovered = this.hoveringOver.slice(-1)[0];
+
+        
+      },
       setAsHovered(something) {
-        this.hoveringOver = something;
+        this.hoveringOver.push(something);
+      },
+      deleteAsHovered() {
+        this.hoveringOver.pop();
       }
     },
     computed: {
+      cameraModded() {
+        return {
+          x: ((this.camera.x/10).toFixed(0)) * 10,
+          y: ((this.camera.y/10).toFixed(0)) * 10,
+        }
+      },
       line2() {
         if (this.boxes) {
           let x1 = this.boxes[0].pos.x + 210;
@@ -68,32 +84,17 @@
 </script>
 
 <template>
-  <!-- <div id="main" @contextmenu.prevent="showQTcontextMenu($event)" @mousedown="showContextMenu = false"> -->
   <div id="main" @mousedown.middle="this.dragging = true" @mousemove="moveCamera" @mouseup="this.dragging = false" @mouseleave="this.dragging = false" @mousedown.left="this.dragging = false">
-  <!-- <div id="main" @mousedown="this.dragging = true" @mouseup="this.dragging = false" @mouseleave="this.dragging = false"> -->
-    <div class="border">
-      <div class="int" @mouseenter="setAsHovered('canvas')" @mouseleave="setAsHovered('nothing')">
-        <p>hoveringOver: {{ hoveringOver }}</p>
-        <p>X: {{ camera.x }}</p>
-        <p>Y: {{ camera.y }}</p>
+    <div class="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="move">
+      <p>hoveringOver: {{ hoveringOver }}</p>
+      <!-- <p>X: {{ cameraModded.x }}</p> -->
+      <!-- <p>Y: {{ cameraModded.y }}</p> -->
 
-        <svg width="100%" height="100%" style="position: absolute; top: 0px; left: 0px;">
-          <defs>
-            <pattern id="polka-dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle fill="rgba(0, 0, 0, 0.2)" cx="5" cy="5" r="2">
-              </circle>
-              <circle fill="rgba(0, 0, 0, 0.3)" cx="15" cy="15" r="1">
-              </circle>
-            </pattern>
-          </defs>
+      <QTbackground :camera="cameraModded" />
 
-          <rect x="0" y="0" width="100%" height="100%" fill="url(#polka-dots)"></rect>
-        </svg>
+      <QTbox v-for="box in boxes" :box :camera="cameraModded" :key="box._id" @entered="setAsHovered" @leaved="deleteAsHovered"/>
 
-        <QTbox v-for="box in boxes" :box :camera :key="box._id" @entered="setAsHovered" @leaved="setAsHovered"/>
-
-        <QTline :camera :line="line2"/>
-      </div>
+      <!-- <QTline :camera="cameraModded" :line="line2"/> -->
     </div>
   </div>
 
@@ -131,31 +132,12 @@
 
     background-color: var(--color-container-background);
 
-    /* background: radial-gradient(circle, rgba(43,48,54,1) 0%, rgba(217,234,255,1) 1000%); */
-
-    /* box-shadow: inset 0px 0px 0px 0px ; */
-    box-shadow: black inset 0px 0px 20px 2px;
     box-shadow: black inset 0px 0px 10px 2px;
 
-    border-radius: 13px;
     border-radius: 15px;
 
     overflow: hidden;
 
     position: relative;
-  }
-
-  #svgtest {
-    position: absolute;
-
-    top: 50px;
-    left: 150px;
-  }
-
-  #svgtest2 {
-    position: absolute;
-
-    top: 38px;
-    left: 38px;
   }
 </style>
