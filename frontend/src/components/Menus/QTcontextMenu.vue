@@ -25,7 +25,25 @@
     },
     computed: {
       optionsPacks() {
-        return [this.QTnoteOptions, this.QTboxOptions, this.QTcanvasOptions]
+        let result = [this.QTcanvasOptions];
+
+        for (let i = 0; i < this.snapHoveringOver.length; i++) {
+          const element = this.snapHoveringOver[i];
+          
+          switch (element.object) {
+            case 'QTbox':
+              result.unshift(this.QTboxOptions);
+              break;
+            case 'QTnote':
+              result.unshift(this.QTnoteOptions);
+              break;
+          
+            default:
+              break;
+          }
+        }
+
+        return result;
       }
     }
   }

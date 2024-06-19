@@ -253,17 +253,14 @@
         this.contextMenuX = e.clientX;
         this.contextMenuY = e.clientY;
 
-        // this.$refs.int.addEventListener("mousedown", this.closeContextMenu);
         document.addEventListener("mousedown", this.closeContextMenu);
       },
       closeContextMenu() {
         if (this.hoveringOver.length === 0) {
           this.showContextMenu = false;
-          // this.$refs.int.removeEventListener("mousedown", this.closeContextMenu);
           document.removeEventListener("mousedown", this.closeContextMenu);
         } else if (this.hoveringOver[0].object !== 'contextMenu') {
           this.showContextMenu = false;
-          // this.$refs.int.removeEventListener("mousedown", this.closeContextMenu);
           document.removeEventListener("mousedown", this.closeContextMenu);
         }
       }
@@ -306,7 +303,7 @@
     </div>
   </div>
 
-  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" @mouseenter="setAsHovered( { object: 'contextMenu'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" :snapHoveringOver @mouseenter="setAsHovered( { object: 'contextMenu'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
 </template>
 
 <style>
