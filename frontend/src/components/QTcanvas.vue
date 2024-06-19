@@ -12,11 +12,14 @@
           x: 0,
           y: 0,
         },
+        tempData: {},
+        timer: [],
         boxes: null,
         showContextMenu: false,
         contextMenuX: 0,
         contextMenuY: 0,
-        hoveringOver: []
+        hoveringOver: [],
+        snapHoveringOver: []
       }
     },
     components: {
@@ -36,28 +39,219 @@
         this.contextMenuX = event.clientX;
         this.contextMenuY = event.clientY;
       },
-      moveCamera(event){
-        if (this.dragging) {
-          this.camera.x = event.movementX + this.camera.x;
-          this.camera.y = event.movementY + this.camera.y;
-        }
-      },
       congrats() {
         console.log("congrats! You done did it!1!");
       },
-      stopCam() {
-        this.dragging = false;
-      },
-      move(event) {
-        let lastHovered = this.hoveringOver.slice(-1)[0];
+      clickHandler() {
+        this.snapHoveringOver = [...this.hoveringOver];
 
+        let self = this;
+
+        if (this.timer.length === 1) {
+          console.log(this.snapHoveringOver.slice(-1)[0]);
+
+          clearInterval(this.timer[0].timer);
+          
+          this.timer = [];
+        } else {
+
+          this.timer.push({
+            timer: setTimeout(function() { self.timer = []; }, 500)
+          });
+
+          this.prepareTempVars();
+  
+          document.addEventListener("mousemove", this.eventHandler);
+          document.addEventListener("mouseup", this.stopEventHandler);
+        }
+      },
+      prepareTempVars() {
+        let lastHovered = this.snapHoveringOver.slice(-1)[0];
+        let beforeLastHovered = this.snapHoveringOver.slice(-2)[0];
+
+        switch (lastHovered.object) {
+          case 'canvas':
+            this.tempData = {};
+            break;
+          case 'interior':
+          case 'QTbox':
+            for (let i = 0; i < this.boxes.length; i++) {
+              if (this.boxes[i]._id === lastHovered._id) {
+                this.tempData = {
+                  QTboxIndex: i,
+                  pos: {
+                    x: this.boxes[i].pos.x,
+                    y: this.boxes[i].pos.y
+                  }
+                }
+                break;
+              }
+            }
+            break;
+          case 'title':
+            for (let i = 0; i < this.boxes.length; i++) {
+              if (this.boxes[i]._id === beforeLastHovered._id) {
+                this.tempData = {
+                  QTboxIndex: i,
+                  pos: {
+                    x: this.boxes[i].pos.x,
+                    y: this.boxes[i].pos.y
+                  }
+                }
+                break;
+              }
+            }
+            break;
+
+          case 'resizer':
+            if (beforeLastHovered.object === 'QTbox') {
+              for (let i = 0; i < this.boxes.length; i++) {
+                if (this.boxes[i]._id === beforeLastHovered._id) {
+                  this.tempData = {
+                    QTboxIndex: i,
+                    dimensions: {
+                      width: this.boxes[i].dimensions.width,
+                      height: this.boxes[i].dimensions.height
+                    }
+                  }
+                  break;
+                }
+              }
+            } else {
+              for (let i = 0; i < this.boxes.length; i++) {
+                if (this.boxes[i]._id === this.snapHoveringOver.slice(-3)[0]._id) {
+                  for (let j = 0; j < this.boxes[i].QTnotes.length; j++) {
+                    if (this.boxes[i].QTnotes[j]._id === beforeLastHovered._id) {
+                      this.tempData = {
+                        QTboxIndex: i,
+                        QTnoteIndex: j,
+                        dimensions: {
+                          width: this.boxes[i].QTnotes[j].dimensions.width,
+                          height: this.boxes[i].QTnotes[j].dimensions.height
+                        }
+                      }
+                      break;
+                    }
+                  }
+                  break;
+                }
+              }
+            }
+            break;
+
+          case 'QTnote':
+            for (let i = 0; i < this.boxes.length; i++) {
+              if (this.boxes[i]._id === beforeLastHovered._id) {
+                for (let j = 0; j < this.boxes[i].QTnotes.length; j++) {
+                  if (this.boxes[i].QTnotes[j]._id === lastHovered._id) {
+                    this.tempData = {
+                      QTboxIndex: i,
+                      QTnoteIndex: j,
+                      pos: {
+                        x: this.boxes[i].QTnotes[j].pos.x,
+                        y: this.boxes[i].QTnotes[j].pos.y
+                      }
+                    }
+                    break;
+                  }
+                }
+                break;
+              }
+            }
+            break;
         
+          default:
+            this.tempData = {};
+            break;
+        }
+      },
+      eventHandler(e) {
+        for (let i = 0; i < this.timer.length; i++) {
+          clearTimeout(this.timer[i].timer);
+        }
+        this.timer = [];
+
+        let lastHovered = this.snapHoveringOver.slice(-1)[0];
+        let beforeLastHovered = this.snapHoveringOver.slice(-2)[0];
+
+        switch (lastHovered.object) {
+          case 'canvas':
+            this.updateCamPos(e);
+            break;
+          case 'interior':
+          case 'QTbox':
+            this.updateBoxPos(e);
+            break;
+          case 'title':
+            this.updateBoxPos(e);
+            break;
+          case 'resizer':
+            if (beforeLastHovered.object === 'QTbox') {
+              this.updateBoxDimensions(e);
+            } else {
+              this.updateNoteDimensions(e);
+            }
+            break;
+          case 'QTnote':
+            this.updateNotePos(e);
+            break;
+          default:
+            break;
+        }
+      },
+      stopEventHandler() {
+        this.removeEventsListeners();
+        this.cleanTempData();
+      },
+      removeEventsListeners() {
+        document.removeEventListener("mousemove", this.eventHandler);
+        document.removeEventListener("mouseup", this.stopEventHandler);
+      },
+      cleanTempData() {
+        this.tempData = {};
+        this.snapHoveringOver = [];
+      },
+      updateCamPos(e) {
+        this.camera.x = e.movementX + this.camera.x;
+        this.camera.y = e.movementY + this.camera.y;
+      },
+      updateBoxPos(e) {
+        this.tempData.pos.x = e.movementX + this.tempData.pos.x;
+        this.tempData.pos.y = e.movementY + this.tempData.pos.y;
+
+        this.boxes[this.tempData.QTboxIndex].pos.x = ((this.tempData.pos.x/10).toFixed(0)) * 10;
+        this.boxes[this.tempData.QTboxIndex].pos.y = ((this.tempData.pos.y/10).toFixed(0)) * 10;
+      },
+      updateNotePos(e) {
+        this.tempData.pos.x = e.movementX + this.tempData.pos.x;
+        this.tempData.pos.y = e.movementY + this.tempData.pos.y;
+
+        this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex].pos.x = ((this.tempData.pos.x/10).toFixed(0)) * 10;
+        this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex].pos.y = ((this.tempData.pos.y/10).toFixed(0)) * 10;
+      },
+      updateBoxDimensions(e) {
+        this.tempData.dimensions.width = e.movementX + this.tempData.dimensions.width;
+        this.tempData.dimensions.height = e.movementY + this.tempData.dimensions.height;
+
+        this.boxes[this.tempData.QTboxIndex].dimensions.width = this.tempData.dimensions.width > 60 ? ((this.tempData.dimensions.width/10).toFixed(0)) * 10 : 60;
+        this.boxes[this.tempData.QTboxIndex].dimensions.height = this.tempData.dimensions.height > 60 ? ((this.tempData.dimensions.height/10).toFixed(0)) * 10 : 60;
+      },
+      updateNoteDimensions(e) {
+        this.tempData.dimensions.width = e.movementX + this.tempData.dimensions.width;
+        this.tempData.dimensions.height = e.movementY + this.tempData.dimensions.height;
+
+        this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex].dimensions.width = this.tempData.dimensions.width > 20 ? ((this.tempData.dimensions.width/10).toFixed(0)) * 10 : 20;
+        this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex].dimensions.height = this.tempData.dimensions.height > 40 ? ((this.tempData.dimensions.height/10).toFixed(0)) * 10 : 40;
       },
       setAsHovered(something) {
         this.hoveringOver.push(something);
       },
       deleteAsHovered() {
         this.hoveringOver.pop();
+      },
+      dblclickHandler() {
+        this.congrats();
+        this.removeEventsListeners();
       }
     },
     computed: {
@@ -74,7 +268,7 @@
   
           let x2 = this.boxes[1].pos.x - 10;
           let y2 = this.boxes[1].pos.y + 100;
-          return { _id: 'test2' , p1: { x: x1, y: y1 }, p2: { x: x2, y: y2}, strokeWidth: 4, color: 'green' };
+          return { _id: 'test2' , p1: { x: x1, y: y1 }, p2: { x: x2, y: y2 }, strokeWidth: 4, color: 'green' };
         }
 
         return { _id: 'test2' , p1: { x: 2, y: 2 }, p2: { x: 2, y: 2}, strokeWidth: 4, color: 'green' };
@@ -84,8 +278,8 @@
 </script>
 
 <template>
-  <div id="main" @mousedown.middle="this.dragging = true" @mousemove="moveCamera" @mouseup="this.dragging = false" @mouseleave="this.dragging = false" @mousedown.left="this.dragging = false">
-    <div class="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="move">
+  <div id="main">
+    <div class="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="clickHandler">
       <p>hoveringOver: {{ hoveringOver }}</p>
       <!-- <p>X: {{ cameraModded.x }}</p> -->
       <!-- <p>Y: {{ cameraModded.y }}</p> -->

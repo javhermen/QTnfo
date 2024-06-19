@@ -2,6 +2,7 @@
 
   import QTbackground from './QTbackground.vue'
   import QTnote from './QTnote.vue'
+  import QTresizer from './QTresizer.vue'
 
   export default {
     data() {
@@ -12,7 +13,8 @@
     },
     components: {
       QTbackground,
-      QTnote
+      QTnote,
+      QTresizer
     },
     props: {
       box: Object,
@@ -58,19 +60,15 @@
 <template>
   <div :id="box._id" class="box" :style @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')">
   <!-- <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')"> -->
-    <h1 @mouseenter="$emit('entered', { object: 'tittle' })" @mouseleave="$emit('leaved')">{{ box.title }}</h1>
+    <h1 @mouseenter="$emit('entered', { object: 'title' })" @mouseleave="$emit('leaved')">{{ box.title }}</h1>
 
-    <div style="overflow: hidden; position: relative;">
+    <div style="overflow: hidden; position: relative;" @mouseenter="$emit('entered', { object: 'interior', _id: this.box._id })" @mouseleave="$emit('leaved')">
       <QTnote v-for="note in box.QTnotes" :note :key="note._id" @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
 
       <QTbackground />
     </div>
 
-    <svg width="15px" height="15px" style="cursor: nw-resize; position: absolute; bottom: 0px; right: 0px;" @mouseenter="$emit('entered', { object: 'resizer' })" @mouseleave="$emit('leaved')">
-      <circle fill="rgba(255, 255, 255, 0.2)" cx="10" cy="2" r="1.5" />
-      <circle fill="rgba(255, 255, 255, 0.2)" cx="7" cy="7" r="1.5" />
-      <circle fill="rgba(255, 255, 255, 0.2)" cx="2" cy="10" r="1.5" />
-    </svg>
+    <QTresizer @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
   </div>
 </template>
 
@@ -97,10 +95,11 @@
     position: relative;
 
     margin-left: 10px;
+    margin-right: 10px;
 
-    width: 90%;
+    width: calc(100% - 20px);
 
-    height: 150px;
+    height: calc(100% - 10px - 40px);
 
     background-color: var(--color-container-background);
     

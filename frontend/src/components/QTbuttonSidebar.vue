@@ -14,7 +14,7 @@
 <template>
   <li class="link">
     <!-- <a href="vier"> -->
-    <RouterLink class="thistest" :to="link">
+    <RouterLink :to="link">
       <slot>
         <img src="/home-icon.png" alt="">
       </slot>
@@ -78,6 +78,8 @@
     /* background-image: url('/001-a.png'); */
 
     background-size: cover;
+
+    user-select: none;
   }
 
   li.link>a>img {

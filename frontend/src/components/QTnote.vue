@@ -1,13 +1,17 @@
 <script>
+
+  import QTresizer from './QTresizer.vue'
+
   export default {
     data() {
       return {
-        tempX: 50,
-        tempY: 50
       }
     },
     props: {
       note: Object,
+    },
+    components: {
+      QTresizer
     },
     computed: {
       style() {
@@ -19,26 +23,6 @@
           height: this.note.dimensions.height+'px'
         }
       }
-    },
-    methods: {
-      drag() {
-        this.tempX = this.note.pos.x;
-        this.tempY = this.note.pos.y;
-        document.addEventListener("mousemove", this.updatePos);
-        document.addEventListener("mouseup", this.stopDrag);
-      },
-      stopDrag() {
-        document.removeEventListener("mousemove", this.updatePos);
-        document.removeEventListener("mouseup", this.stopDrag);
-      },
-      updatePos(e) {
-        this.tempX = e.movementX + this.tempX;
-        this.tempY = e.movementY + this.tempY;
-
-        
-        this.note.pos.x = ((this.tempX/10).toFixed(0)) * 10;
-        this.note.pos.y = ((this.tempY/10).toFixed(0)) * 10;
-      }
     }
   }
 
@@ -47,9 +31,9 @@
 
 
 <template>
-  <div :id="note._id" class="note" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', { object: 'QTnote', _id: this.note._id })" @mouseleave="$emit('leaved')">
-  <!-- <div :id="box._id" class="box" ref="box" :style="{left: box.position.x + camera.x+'px', top: box.position.y + camera.y+'px', zIndex: box.position.z, width: box.dimensions.width+'px', height: box.dimensions.height+'px'}" @mousedown="drag"> -->
+  <div :id="note._id" class="note" :style @mouseenter="$emit('entered', { object: 'QTnote', _id: this.note._id })" @mouseleave="$emit('leaved')">
     <p>{{ note.info }}</p>
+    <QTresizer @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
   </div>
 </template>
 
