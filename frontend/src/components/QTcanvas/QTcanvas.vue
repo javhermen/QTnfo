@@ -1,7 +1,7 @@
 <script>
   import QTbox from './QTbox.vue'
   import QTline from './QTline.vue'
-  import QTcontextMenu from './Menus/QTcontextMenu.vue'
+  import QTcontextMenu from '../Menus/QTcontextMenu.vue'
   import QTbackground from './QTbackground.vue'
   import axios from 'axios';
 
@@ -34,11 +34,6 @@
         .then(response => this.boxes = response.data.QTboxes);
     },
     methods: {
-      showQTcontextMenu(event) {
-        this.showContextMenu = true;
-        this.contextMenuX = event.clientX;
-        this.contextMenuY = event.clientY;
-      },
       congrats() {
         console.log("congrats! You done did it!1!");
       },
@@ -48,8 +43,6 @@
         let self = this;
 
         if (this.timer.length === 1) {
-          console.log(this.snapHoveringOver.slice(-1)[0]);
-
           clearInterval(this.timer[0].timer);
           
           this.timer = [];
@@ -252,6 +245,27 @@
       dblclickHandler() {
         this.congrats();
         this.removeEventsListeners();
+      },
+      openContextMenu(e) {
+        this.snapHoveringOver = [...this.hoveringOver];
+
+        this.showContextMenu = true;
+        this.contextMenuX = e.clientX;
+        this.contextMenuY = e.clientY;
+
+        // this.$refs.int.addEventListener("mousedown", this.closeContextMenu);
+        document.addEventListener("mousedown", this.closeContextMenu);
+      },
+      closeContextMenu() {
+        if (this.hoveringOver.length === 0) {
+          this.showContextMenu = false;
+          // this.$refs.int.removeEventListener("mousedown", this.closeContextMenu);
+          document.removeEventListener("mousedown", this.closeContextMenu);
+        } else if (this.hoveringOver[0].object !== 'contextMenu') {
+          this.showContextMenu = false;
+          // this.$refs.int.removeEventListener("mousedown", this.closeContextMenu);
+          document.removeEventListener("mousedown", this.closeContextMenu);
+        }
       }
     },
     computed: {
@@ -279,7 +293,7 @@
 
 <template>
   <div id="main">
-    <div class="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="clickHandler">
+    <div class="int" ref="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="clickHandler" @contextmenu.prevent="openContextMenu">
       <p>hoveringOver: {{ hoveringOver }}</p>
       <!-- <p>X: {{ cameraModded.x }}</p> -->
       <!-- <p>Y: {{ cameraModded.y }}</p> -->
@@ -292,7 +306,7 @@
     </div>
   </div>
 
-  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" ></QTcontextMenu>
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" @mouseenter="setAsHovered( { object: 'contextMenu'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
 </template>
 
 <style>

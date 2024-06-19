@@ -1,12 +1,12 @@
 <script setup>
-  import QTbuttonSidebar from './QTbuttonSidebar.vue'
+  import QTbuttonHeader from './QTbuttonHeader.vue'
 </script>
 
 <template>
   <header>
     <div class="header">
       <ul>
-        <QTbuttonSidebar link="/"></QTbuttonSidebar>
+        <QTbuttonHeader link="/"></QTbuttonHeader>
       </ul>
     </div>
   </header>

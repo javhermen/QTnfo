@@ -1,6 +1,6 @@
 <script>
-  import QTcontextMenu from './Menus/QTcontextMenu.vue'
-  import QTnotebook from './QTnotebook.vue'
+  import QTcontextMenu from '../Menus/QTcontextMenu.vue'
+  import QTpage from './QTpage.vue'
   import axios from 'axios';
 
   export default {
@@ -12,7 +12,7 @@
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12],
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11],
-        notebooks: null,
+        pages: null,
         showContextMenu: false,
         contextMenuX: 0,
         contextMenuY: 0
@@ -20,13 +20,13 @@
     },
     components: {
       QTcontextMenu,
-      QTnotebook
+      QTpage
     },
     beforeCreate() {
       axios
-        // .get('http://localhost:3050/api/QTnotebooks')
-        .get('http://192.168.1.145:3050/api/QTnotebooks')
-        .then(response => this.notebooks = response.data);
+        // .get('http://localhost:3050/api/'+this.$route.params.QTnotebook+'/pages')
+        .get('http://192.168.1.145:3050/api/'+this.$route.params.QTnotebook+'/QTpages')
+        .then(response => this.pages = response.data);
     },
     methods: {
       showQTcontextMenu(event) {
@@ -39,14 +39,14 @@
 </script>
 
 <template>
-  <div id="notebooksContainer">
+  <div id="pagesContainer">
     <div class="int">
-      <ul class="notebooks">
+      <ul class="pages">
         <li>
-          <QTnotebook :notebook="{ name: 'New Notebook', color: '#333333', static: true}" />
+          <QTpage :page="{ name: 'New Page', color: '#333333', static: true}" />
         </li>
-        <li v-for="notebook in notebooks">
-          <QTnotebook :notebook />
+        <li v-for="page in pages">
+          <QTpage :page />
         </li>
       </ul>
     </div>
@@ -56,7 +56,7 @@
 </template>
 
 <style>
-  div#notebooksContainer {
+  div#pagesContainer {
     width: 100%;
     height: 100%;
 
@@ -66,7 +66,7 @@
     padding-bottom: 15px;
   }
 
-  div#notebooksContainer>div.int {
+  div#pagesContainer>div.int {
     width: 100%;
     height: 100%;
 
@@ -81,7 +81,7 @@
     box-shadow: black inset 0px 0px 10px 2px;
   }
 
-  div#notebooksContainer>div.int>ul.notebooks {
+  div#pagesContainer>div.int>ul.pages {
     /* display: flex; */
     flex-wrap: wrap;
     list-style-type: none;
@@ -91,7 +91,7 @@
     /* justify-content: center; */
   }
 
-  div#notebooksContainer>div.int>ul.notebooks>li {
+  div#pagesContainer>div.int>ul.pages>li {
     float: left;
     /* width: 16.666%; */
     width: 14.28%;
