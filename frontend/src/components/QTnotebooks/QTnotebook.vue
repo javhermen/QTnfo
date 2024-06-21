@@ -12,6 +12,7 @@
     computed: {
       style() {
         return {
+          color: this.notebook.color,
           backgroundColor: this.notebook.color
         }
       },
@@ -68,6 +69,8 @@
 
     border-radius: 10px 5px 5px 10px;
     transition: transform 1s;
+
+    text-decoration: none;
   }
 
   a.notebook:hover {
@@ -99,6 +102,10 @@
   a.notebook>div.int>div.title>h1 {
     max-height: 60px;
     /* overflow: hidden; */
+    /* color: aliceblue; */
+    text-decoration: none;
+
+    filter: invert(1);
 
     line-height: 1em;
   }
