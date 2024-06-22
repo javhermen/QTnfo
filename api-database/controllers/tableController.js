@@ -105,14 +105,35 @@ class TableController {
 		}
 	}
 
-  static async insert(res, table, body) {
-    try {
-      let model = this.getModel(table);
-      let MyRow = new model(body);
-      
-      MyRow.save();
 
-      res.json(MyRow)
+  static async updateQTbox(res, QTboxID, QTbox) {
+		try {
+      let model = this.getModel('QTboxes');
+      const data = await model.findOne({_id: QTboxID});
+      data.title = QTbox.title ? QTbox.title : data.title;
+      data.color = QTbox.color ? QTbox.color : data.color;
+      data.pos = QTbox.pos ? QTbox.pos : data.pos;
+      data.dimensions = QTbox.dimensions ? QTbox.dimensions : data.dimensions;
+      data.save();
+      res.json(data);
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
+  static async updateQTnote(res, QTnoteID, QTnote) {
+		try {
+      let model = this.getModel('QTnotes');
+      const data = await model.findOne({_id: QTnoteID});
+      data.type = QTnote.type ? QTnote.type : data.type;
+      data.info = QTnote.info ? QTnote.info : data.info;
+      data.color = QTnote.color ? QTnote.color : data.color;
+      data.pos = QTnote.pos ? QTnote.pos : data.pos;
+      data.dimensions = QTnote.dimensions ? QTnote.dimensions : data.dimensions;
+      data.save();
+      res.json(data);
 		}
     catch (error) {
       console.log(error);
@@ -121,98 +142,29 @@ class TableController {
 	}
 
 
-  static async refill(res) {
-    try {
-      let QTnoteModel = this.getModel('QTnotes');
-      let QTnote1 = new QTnoteModel({
-        type: 'text',
-        info: 'hello1',
-        pos: {
-          x: 50,
-          y: 50,
-          z: 2
-        },
-        dimensions: {
-          width: 100,
-          height: 100
-        }
+  static async insertQTbox(res, QTpageID, QTbox) {
+		try {
+
+      const QTboxes = this.getModel('QTboxes');
+      const QTboxNew = new QTboxes({
+        title: QTbox.title ? QTbox.title : 'title',
+        color: QTbox.color ? QTbox.color : '#1b3049',
+        pos: QTbox.pos ? QTbox.pos : { x: 0, y: 0, z: 5 },
+        dimensions: QTbox.dimensions ? QTbox.dimensions : { width: 200, height: 200 },
+        QTnotes: QTbox.QTnotes ? QTbox.QTnotes : []
       });
 
-      let QTnote2 = new QTnoteModel({
-        type: 'text',
-        info: 'hello2',
-        pos: {
-          x: 50,
-          y: 50,
-          z: 2
-        },
-        dimensions: {
-          width: 100,
-          height: 100
-        }
-      });
+      await QTboxNew.save();
 
-      
-      let QTboxModel = this.getModel('QTboxes');
-      let QTbox1 = new QTboxModel({
-        title: 'testHead1',
-        pos: {
-          x: 50,
-          y: 50,
-          z: 2
-        },
-        dimensions: {
-          width: 200,
-          height: 200
-        },
-        QTnotes: [QTnote1._id]
-      });
-      
-      let QTbox2 = new QTboxModel({
-        title: 'testHead2',
-        pos: {
-          x: 250,
-          y: 250,
-          z: 3
-        },
-        dimensions: {
-          width: 200,
-          height: 200
-        },
-        QTnotes: [QTnote2._id]
-      });
+      const QTpages = this.getModel('QTpages');
+      const QTpage = await QTpages.findOne({_id: QTpageID});
 
+      QTpage.QTboxes.push(QTboxNew._id);
 
-      let QTconnectionModel = this.getModel('QTconnections');
-      let QTconnection = new QTconnectionModel({
-        QTboxID1: QTbox1._id,
-        QTboxID2: QTbox2._id
-      });
-
-
-      let QTpageModel = this.getModel('QTpages');
-      let QTpage = new QTpageModel({
-        name: 'pageNameNum',
-        QTboxes: [QTbox1._id, QTbox2._id],
-        QTconnections: [QTconnection._id]
-      });
-      
-      let QTnotebookModel = this.getModel('QTnotebooks');
-      let QTnotebook = new QTnotebookModel({
-        name: 'noteboook',
-        QTpages: [QTpage._id]
-      });
-
-
-      QTnote1.save();
-      QTnote2.save();
-      QTbox1.save();
-      QTbox2.save();
-      QTconnection.save();
       QTpage.save();
-      QTnotebook.save();
 
-      res.json({refilled: 'true'});
+
+      res.json(QTboxNew);
 		}
     catch (error) {
       console.log(error);
@@ -220,28 +172,33 @@ class TableController {
 		}
 	}
 
+  static async insertQTnote(res, QTboxID, QTnote) {
+		try {
 
-  static async unfill(res) {
-    try {
-      let QTnoteModel = this.getModel('QTnotes');
-      let QTboxModel = this.getModel('QTboxes');
-      let QTconnectionModel = this.getModel('QTconnections');
-      let QTpageModel = this.getModel('QTpages');
-      let QTnotebookModel = this.getModel('QTnotebooks');
+      const QTnotes = this.getModel('QTnotes');
+      const QTnoteNew = new QTnotes({
+        type: QTnote.type ? QTnote.type : 'text',
+        info: QTnote.info ? QTnote.info : 'text...',
+        color: QTnote.color ? QTnote.color : '#1b3049',
+        pos: QTnote.pos ? QTnote.pos : { x: 0, y: 0, z: 6},
+        dimensions: QTnote.dimensions ? QTnote.dimensions : { width: 200, height: 200 },
+        QTnotes: QTnote.QTnotes ? QTnote.QTnotes : []
+      });
 
-      let QTnote = await QTnoteModel.deleteMany({});
-      let QTbox = await QTboxModel.deleteMany({});
-      let QTconnection = await QTconnectionModel.deleteMany({});
-      let QTpage = await QTpageModel.deleteMany({});
-      let QTnotebook = await QTnotebookModel.deleteMany({});
+      await QTnoteNew.save();
 
-      res.json({unfilled: 'true'});
-    }
+
+      const QTboxes = this.getModel('QTboxes');
+      const QTbox = await QTboxes.findOne({_id: QTboxID});
+
+      res.json(QTnoteNew);
+		}
     catch (error) {
       console.log(error);
       this.errorHandler(res, error);
-    }
+		}
 	}
+
 
 
   static async reset(res) {
@@ -262,6 +219,7 @@ class TableController {
       let QTnote1 = new QTnoteModel({
         type: 'text',
         info: 'hello1',
+        color: '#1b3049',
         pos: {
           x: 50,
           y: 50,
@@ -276,6 +234,7 @@ class TableController {
       let QTnote2 = new QTnoteModel({
         type: 'text',
         info: 'hello2',
+        color: '#1b3049',
         pos: {
           x: 50,
           y: 50,
@@ -290,6 +249,7 @@ class TableController {
       
       let QTbox1 = new QTboxModel({
         title: 'testHead1',
+        color: '#1b3049',
         pos: {
           x: 50,
           y: 50,
@@ -304,6 +264,7 @@ class TableController {
       
       let QTbox2 = new QTboxModel({
         title: 'testHead2',
+        color: '#1b3049',
         pos: {
           x: 250,
           y: 250,
@@ -318,6 +279,7 @@ class TableController {
 
 
       let QTconnection = new QTconnectionModel({
+        color: '#1b3049',
         QTboxID1: QTbox1._id,
         QTboxID2: QTbox2._id
       });
@@ -325,6 +287,7 @@ class TableController {
 
       let QTpage = new QTpageModel({
         name: 'pageNameNum',
+        color: '#ffffff',
         QTboxes: [QTbox1._id, QTbox2._id],
         QTconnections: [QTconnection._id]
       });

@@ -18,7 +18,6 @@
         return {
           left: this.note.pos.x+'px',
           top: this.note.pos.y+'px',
-          zIndex: this.note.pos.z,
           width: this.note.dimensions.width+'px',
           height: this.note.dimensions.height+'px'
         }
@@ -41,6 +40,7 @@
   .note {
     position: absolute;
 
+    z-index: 2;
     /*
     top: 50px;
     left: 50px;

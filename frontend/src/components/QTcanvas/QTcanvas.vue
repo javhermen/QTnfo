@@ -12,8 +12,9 @@
           x: 0,
           y: 0,
         },
+        QTpageID: null,
         tempData: {},
-        timer: [],
+        dblClickTimers: [],
         boxes: null,
         showContextMenu: false,
         contextMenuX: 0,
@@ -31,29 +32,44 @@
     beforeCreate() {
       axios
         .get('http://192.168.1.145:3050/api/'+this.$route.params.QTnotebook+'/'+this.$route.params.QTpage)
-        .then(response => this.boxes = response.data.QTboxes);
+        .then(response => {
+          this.boxes = response.data.QTboxes;
+          this.QTpageID = response.data._id;
+        });
     },
     methods: {
       congrats() {
         console.log("congrats! You done did it!1!");
       },
-      clickHandler() {
+      getMousePositionCanvas(e) {
+        var rect = e.target.getBoundingClientRect();
+        var x = e.clientX - rect.left - this.cameraModded.x;
+        var y = e.clientY - rect.top - this.cameraModded.y;
+
+        return {
+          x,
+          y
+        }
+      },
+      clickHandler(e) {
         this.snapHoveringOver = [...this.hoveringOver];
 
         let self = this;
 
-        if (this.timer.length === 1) {
-          clearInterval(this.timer[0].timer);
+        this.prepareTempVars();
+
+        if (this.dblClickTimers.length === 1) {
+          clearInterval(this.dblClickTimers[0].timer);
           
-          this.timer = [];
+          this.dblclickHandler(e);
+
+          this.dblClickTimers = [];
         } else {
 
-          this.timer.push({
-            timer: setTimeout(function() { self.timer = []; }, 500)
+          this.dblClickTimers.push({
+            timer: setTimeout(function() { self.dblClickTimers = []; }, 500)
           });
 
-          this.prepareTempVars();
-  
           document.addEventListener("mousemove", this.eventHandler);
           document.addEventListener("mouseup", this.stopEventHandler);
         }
@@ -159,10 +175,10 @@
         }
       },
       eventHandler(e) {
-        for (let i = 0; i < this.timer.length; i++) {
-          clearTimeout(this.timer[i].timer);
+        for (let i = 0; i < this.dblClickTimers.length; i++) {
+          clearTimeout(this.dblClickTimers[i].timer);
         }
-        this.timer = [];
+        this.dblClickTimers = [];
 
         let lastHovered = this.snapHoveringOver.slice(-1)[0];
         let beforeLastHovered = this.snapHoveringOver.slice(-2)[0];
@@ -194,11 +210,29 @@
       },
       stopEventHandler() {
         this.removeEventsListeners();
+        this.saveChangesInDB();
         this.cleanTempData();
       },
       removeEventsListeners() {
         document.removeEventListener("mousemove", this.eventHandler);
         document.removeEventListener("mouseup", this.stopEventHandler);
+      },
+      saveChangesInDB() {
+        if (this.tempData.QTnoteIndex >= 0) {
+
+          let newQTnote = this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex];
+
+          axios
+            .put('http://192.168.1.145:3050/api/QTnote/'+newQTnote._id, { QTnote: newQTnote });
+
+        } else if (this.tempData.QTboxIndex >= 0) {
+
+          let newQTbox = this.boxes[this.tempData.QTboxIndex];
+
+          axios
+            .put('http://192.168.1.145:3050/api/QTbox/'+newQTbox._id, { QTbox: newQTbox });
+
+        }
       },
       cleanTempData() {
         this.tempData = {};
@@ -237,16 +271,61 @@
         this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex].dimensions.height = this.tempData.dimensions.height > 40 ? ((this.tempData.dimensions.height/10).toFixed(0)) * 10 : 40;
       },
       setAsHovered(something) {
-        this.hoveringOver.push(something);
+        if (something.object === 'canvas') {
+          if (this.hoveringOver.length !== 1) {
+            this.hoveringOver.push(something);
+          }
+        } else {
+          this.hoveringOver.push(something);
+        }
       },
       deleteAsHovered() {
         this.hoveringOver.pop();
       },
-      dblclickHandler() {
-        this.congrats();
+      dblclickHandler(e) {
+        let lastHovered = this.snapHoveringOver.slice(-1)[0]
+
+        switch (lastHovered.object) {
+          case 'canvas':
+            let mousePos = this.getMousePositionCanvas(e);
+
+            mousePos = {
+              x: (((mousePos.x/10).toFixed(0)) * 10) - 100,
+              y: (((mousePos.y/10).toFixed(0)) * 10) - 20
+            }
+
+            this.createQTbox(mousePos);
+            break;
+
+          case 'interior':
+            this.createQTnote();
+            break;
+        
+          default:
+            break;
+        }
+
+
+        this.cleanTempData();
         this.removeEventsListeners();
       },
+      createQTbox(mousePos) {
+        let newQTbox = {pos: mousePos};
+
+        axios
+          .post('http://192.168.1.145:3050/api/'+ this.QTpageID +'/QTbox/', { QTbox: newQTbox })
+          .then(response => this.boxes.push(response.data));
+      },
+      createQTnote(QTboxID, pos) {
+
+        let newQTnote = {};
+
+        axios
+          .post('http://192.168.1.145:3050/api/'+ QTboxID +'/QTnote/', { QTnote: newQTnote })
+          .then(response => this.boxes.push(response.data));
+      },
       openContextMenu(e) {
+
         this.snapHoveringOver = [...this.hoveringOver];
 
         this.showContextMenu = true;
@@ -254,15 +333,41 @@
         this.contextMenuY = e.clientY;
 
         document.addEventListener("mousedown", this.closeContextMenu);
+        
       },
-      closeContextMenu() {
+      closeContextMenu(e) {
+        /*
         if (this.hoveringOver.length === 0) {
+          this.hoveringOver = [];
           this.showContextMenu = false;
           document.removeEventListener("mousedown", this.closeContextMenu);
-        } else if (this.hoveringOver[0].object !== 'contextMenu') {
+        } else {
+          this.hoveringOver = [ {object: 'canvas'} ];
           this.showContextMenu = false;
           document.removeEventListener("mousedown", this.closeContextMenu);
         }
+        */
+        if (e) {
+          if (this.detectLeftButton(e)) {
+            this.showContextMenu = false;
+            document.removeEventListener("mousedown", this.closeContextMenu);
+          }
+        } else {
+          this.showContextMenu = false;
+          document.removeEventListener("mousedown", this.closeContextMenu);
+        }
+      },
+      contextMenuHandler(option) {
+        console.log(option);
+        
+      },
+      detectLeftButton(evt) {
+        evt = evt || window.event;
+        if ("buttons" in evt) {
+          return evt.buttons == 1;
+        }
+        var button = evt.which || evt.button;
+        return button == 1;
       }
     },
     computed: {
@@ -290,8 +395,9 @@
 
 <template>
   <div id="main">
-    <div class="int" ref="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="clickHandler" @contextmenu.prevent="openContextMenu">
+    <div class="int" ref="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="clickHandler" @mousedown.right="closeContextMenu()" @contextmenu.prevent="openContextMenu">
       <p>hoveringOver: {{ hoveringOver }}</p>
+      <p>contextMenu: {{ showContextMenu }}</p>
       <!-- <p>X: {{ cameraModded.x }}</p> -->
       <!-- <p>Y: {{ cameraModded.y }}</p> -->
 
@@ -303,7 +409,7 @@
     </div>
   </div>
 
-  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" :snapHoveringOver @mouseenter="setAsHovered( { object: 'contextMenu'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" :snapHoveringOver @optionPressed="contextMenuHandler" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
 </template>
 
 <style>

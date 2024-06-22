@@ -6,6 +6,7 @@ class ApiController {
     api: "QTnfo_database_api",
     valid_routes: {
       GET: {
+        "/": "Gets this info message.",
         "/api": "Gets this info message.",
         "/api/<table>": "Gets all the data from a table.",
         "/api/<table>/id/<id>": "Gets the info of a single row on a table using the ID as a reference."
@@ -16,44 +17,6 @@ class ApiController {
     }
   }
 
-  /*
-  static async router(req, res) {
-    const { method, params, body } = req;
-    const { table, id } = params;
-
-
-    switch (method) {
-      case "GET":
-        if (id) {
-          TableController.getByID(res, table, id);
-        } else if (table) {
-          TableController.getAll(res, table);
-        } else {
-          res.json(ApiController.JSON_HELP);
-        }
-        break;
-
-      case "POST":
-        if (id) {
-
-        } else if (table) {
-          TableController.insert(res, table, body);
-        } else {
-          TableController.test(res);
-        }
-        break;
-
-      case "PUT":
-        break;
-
-      case "DELETE":
-        break;
-    
-      default:
-        break;
-    }
-  }
-  */
   static async help(req, res) {
     res.json(ApiController.JSON_HELP);
   }
@@ -76,46 +39,33 @@ class ApiController {
     const { QTnotebook, QTpage } = req.params;
     TableController.getNotebookPage(res, QTnotebook, QTpage);
   }
-  /*
-  static async router(req, res) {
-    const { method, params, body } = req;
-    const { table, id } = params;
 
-
-    switch (method) {
-      case "GET":
-        if (table) {
-          TableController.getAll(res, table);
-        } else {
-          res.json(ApiController.JSON_HELP);
-        }
-        break;
-
-      case "POST":
-        if (table) {
-          TableController.insert(res, table, body);
-        }
-        break;
-
-      case "PUT":
-        break;
-
-      case "DELETE":
-        break;
-    
-      default:
-        break;
-    }
-  }
-  */
-
-  static async refill(req, res) {
-    TableController.refill(res);
+  static async putQTbox(req, res) {
+    const { QTboxID } = req.params;
+    const QTbox = req.body.QTbox;
+    TableController.updateQTbox(res, QTboxID, QTbox);
   }
 
-  static async unfill(req, res) {
-    TableController.unfill(res);
+  static async putQTnote(req, res) {
+    const { QTnoteID } = req.params;
+    const QTnote = req.body.QTnote;
+    TableController.updateQTnote(res, QTnoteID, QTnote);
   }
+
+
+  static async postQTbox(req, res) {
+    const { QTpageID } = req.params;
+    const QTbox = req.body.QTbox;
+    TableController.insertQTbox(res, QTpageID, QTbox);
+  }
+
+  static async postQTnote(req, res) {
+    const { QTboxID } = req.params;
+    const QTnote = req.body.QTnote;
+    TableController.insertQTnote(res, QTboxID, QTnote);
+  }
+
+
 
   static async reset(req, res) {
     TableController.reset(res);

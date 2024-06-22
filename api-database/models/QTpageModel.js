@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const QTpageSchema = new Schema ({
   name: { type: String },
+  color: { type: String },
   QTboxes: [{ type: Schema.Types.ObjectId, ref: 'QTbox' }],
   QTconnections: [{ type: Schema.Types.ObjectId, ref: 'QTconnection' },
 ]

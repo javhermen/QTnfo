@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const QTboxSchema = new Schema ({
   title: { type: String },
+  color: { type: String },
   pos: {
     x: { type: Number },
     y: { type: Number },
