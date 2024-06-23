@@ -18,6 +18,7 @@
         return {
           left: this.note.pos.x+'px',
           top: this.note.pos.y+'px',
+          backgroundColor: this.note.color,
           width: this.note.dimensions.width+'px',
           height: this.note.dimensions.height+'px'
         }
@@ -32,7 +33,7 @@
 <template>
   <div :id="note._id" class="note" :style @mouseenter="$emit('entered', { object: 'QTnote', _id: this.note._id })" @mouseleave="$emit('leaved')">
     <p>{{ note.info }}</p>
-    <QTresizer @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
+    <QTresizer @mouseenter="$emit('entered', { object: 'resizer', _id: this.note._id })" @mouseleave="$emit('leaved')" />
   </div>
 </template>
 
@@ -46,7 +47,7 @@
     left: 50px;
     */
 
-    background-color: rgb(27, 48, 73);
+    /* background-color: rgb(27, 48, 73); */
 
     border-radius: 10px;
     /* border-radius: 100%; */

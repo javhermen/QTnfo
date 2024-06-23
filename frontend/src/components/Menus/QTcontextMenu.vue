@@ -7,12 +7,12 @@
         ],
         QTboxOptions: [
           {text: 'Add QTnote', option: 'add', target: { object: 'QTbox', _id: '' }},
-          {text: 'Change title', option: 'title', target: { object: 'QTbox', _id: '' }},
+          // {text: 'Change title', option: 'title', target: { object: 'QTbox', _id: '' }},
           {text: 'Change color', option: 'color', target: { object: 'QTbox', _id: '' }},
           {text: 'Delete QTbox', option: 'delete', target: { object: 'QTbox', _id: '' }},
         ],
         QTnoteOptions: [
-          {text: 'Change info', option: 'info', target: { object: 'QTnote', _id: '' }, parent: { object: 'QTbox', _id: '' }},
+          // {text: 'Change info', option: 'info', target: { object: 'QTnote', _id: '' }, parent: { object: 'QTbox', _id: '' }},
           {text: 'Change color', option: 'color', target: { object: 'QTnote', _id: '' }, parent: { object: 'QTbox', _id: '' }},
           {text: 'Delete QTnote', option: 'delete', target: { object: 'QTnote', _id: '' }, parent: { object: 'QTbox', _id: '' }},
         ],

@@ -181,8 +181,7 @@ class TableController {
         info: QTnote.info ? QTnote.info : 'text...',
         color: QTnote.color ? QTnote.color : '#1b3049',
         pos: QTnote.pos ? QTnote.pos : { x: 0, y: 0, z: 6},
-        dimensions: QTnote.dimensions ? QTnote.dimensions : { width: 200, height: 200 },
-        QTnotes: QTnote.QTnotes ? QTnote.QTnotes : []
+        dimensions: QTnote.dimensions ? QTnote.dimensions : { width: 100, height: 100 },
       });
 
       await QTnoteNew.save();
@@ -190,6 +189,10 @@ class TableController {
 
       const QTboxes = this.getModel('QTboxes');
       const QTbox = await QTboxes.findOne({_id: QTboxID});
+
+      QTbox.QTnotes.push(QTnoteNew._id);
+
+      QTbox.save();
 
       res.json(QTnoteNew);
 		}

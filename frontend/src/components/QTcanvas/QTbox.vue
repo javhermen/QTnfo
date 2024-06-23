@@ -7,8 +7,6 @@
   export default {
     data() {
       return {
-        tempX: 50,
-        tempY: 50
       }
     },
     components: {
@@ -18,7 +16,8 @@
     },
     props: {
       box: Object,
-      camera: Object
+      camera: Object,
+      writable: Boolean
     },
     computed: {
       style() {
@@ -26,29 +25,50 @@
           left: this.box.pos.x + this.camera.x+'px',
           top: this.box.pos.y + this.camera.y+'px',
           zIndex: this.box.pos.z,
+          backgroundColor: this.box.color,
           width: this.box.dimensions.width+'px',
           height: this.box.dimensions.height+'px'
         }
-      }
-    },
-    methods: {
-      drag() {
-        this.tempX = this.box.pos.x;
-        this.tempY = this.box.pos.y;
-        document.addEventListener("mousemove", this.updatePos);
-        document.addEventListener("mouseup", this.stopDrag);
       },
-      stopDrag() {
-        document.removeEventListener("mousemove", this.updatePos);
-        document.removeEventListener("mouseup", this.stopDrag);
+      styleTitle() {
+        if (this.writable) {
+          return {
+            width: this.box.dimensions.width+'px',
+            height: '40px',
+            fontSize: '2em',
+            backgroundColor: 'rgba(0,0,0,0)',
+            border: 'none',
+            color: 'var(--text-color)',
+            textAlign: 'center',
+            userSelect: 'none',
+          }
+        } else {
+          return {
+            width: this.box.dimensions.width+'px',
+            height: '40px',
+            fontSize: '2em',
+            backgroundColor: 'rgba(0,0,0,0)',
+            border: 'none',
+            color: 'var(--text-color)',
+            textAlign: 'center',
+            userSelect: 'none',
+            outline: 'none',
+            cursor: 'default'
+          }
+        }
       },
-      updatePos(e) {
-        this.tempX = e.movementX + this.tempX;
-        this.tempY = e.movementY + this.tempY;
-
-        
-        this.box.pos.x = ((this.tempX/10).toFixed(0)) * 10;
-        this.box.pos.y = ((this.tempY/10).toFixed(0)) * 10;
+      styleBlocker() {
+        if (this.writable) {
+          return {
+            width: 0+'px',
+            height: '0px',
+          }
+        } else {
+          return {
+            width: this.box.dimensions.width+'px',
+            height: '40px',
+          }
+        }
       }
     }
   }
@@ -60,15 +80,19 @@
 <template>
   <div :id="box._id" class="box" :style @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')">
   <!-- <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')"> -->
-    <h1 @mouseenter="$emit('entered', { object: 'title', _id: this.box._id })" @mouseleave="$emit('leaved')">{{ box.title }}</h1>
+    <!-- <h1 @mouseenter="$emit('entered', { object: 'title', _id: this.box._id })" @mouseleave="$emit('leaved')">{{ box.title }}</h1> -->
+    <div class="title" @mouseenter="$emit('entered', { object: 'title', _id: this.box._id })" @mouseleave="$emit('leaved')">
+      <div v-if="!writable" class="blocker" :style="styleBlocker" ></div>
+      <input :style="styleTitle"  v-model="box.title" :readonly="!writable" ></input>
+    </div>
 
-    <div style="overflow: hidden; position: relative;" @mouseenter="$emit('entered', { object: 'interior', _id: this.box._id })" @mouseleave="$emit('leaved')">
+    <div class="interior" style="overflow: hidden; position: relative;" @mouseenter="$emit('entered', { object: 'interior', _id: this.box._id })" @mouseleave="$emit('leaved')">
       <QTnote v-for="note in box.QTnotes" :note :key="note._id" @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
 
       <QTbackground />
     </div>
 
-    <QTresizer @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
+    <QTresizer @mouseenter="$emit('entered', { object: 'resizer', _id: this.box._id })" @mouseleave="$emit('leaved')" />
   </div>
 </template>
 
@@ -81,7 +105,7 @@
     left: 50px;
     */
 
-    background-color: rgb(27, 48, 73);
+    /* background-color: rgb(27, 48, 73); */
 
     border-radius: 10px;
     /* border-radius: 100%; */
@@ -91,7 +115,11 @@
     /* box-shadow: inset 10px -10px 25px -15px rgb(0, 0, 0); */
   }
 
-  .box>div {
+  .title {
+    position: relative;
+  }
+
+  .box>div.interior {
     position: relative;
 
     margin-left: 10px;
@@ -110,10 +138,22 @@
     border-radius: 10px;
   }
 
+  div.blocker {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    height: 40px;
+
+    /* background-color: aqua; */
+  }
+
   .box>h1 {
     text-align: center;
     user-select: none;
   }
+
 
   p {
     margin: 10px;
