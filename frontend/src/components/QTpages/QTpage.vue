@@ -71,6 +71,7 @@
     display: flex;
 
     /* background-color: var(--color-background); */
+    /* background-color: #999999; */
     /* background-color: #6464ff; */
     /* background-color: rgb(0, 0, 95); */
 

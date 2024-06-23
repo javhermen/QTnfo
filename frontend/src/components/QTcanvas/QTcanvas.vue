@@ -5,6 +5,7 @@
   import QTbackground from './QTbackground.vue'
   import QTtextEditor from './QTtextEditor.vue'
   import QTtitleEditor from './QTtitleEditor.vue'
+  import apiUrl from '../../assets/apiUrl'
   import axios from 'axios';
 
   export default {
@@ -22,9 +23,11 @@
         contextMenuX: 0,
         contextMenuY: 0,
         showTitleEditor: false,
+        showInfoEditor: false,
         hoveringOver: [],
         snapHoveringOver: [],
         snapTitleEditor: [],
+        snapInfoEditor: [],
       }
     },
     components: {
@@ -37,7 +40,7 @@
     },
     beforeCreate() {
       axios
-        .get('http://192.168.1.145:3050/api/'+this.$route.params.QTnotebook+'/'+this.$route.params.QTpage)
+        .get(apiUrl +''+ this.$route.params.QTnotebook+'/'+this.$route.params.QTpage)
         .then(response => {
           this.boxes = response.data.QTboxes;
           this.QTpageID = response.data._id;
@@ -95,7 +98,7 @@
         if (this.dblClickTimers.length === 1) {
           clearInterval(this.dblClickTimers[0].timer);
           
-          if (this.showTitleEditor === false) {
+          if (this.showTitleEditor === false && this.showInfoEditor === false ) {
             this.dblclickHandler(e);
           }
 
@@ -103,7 +106,7 @@
         } else {
 
           
-          if (this.showTitleEditor === false) {
+          if (this.showTitleEditor === false && this.showInfoEditor === false ) {
             this.dblClickTimers.push({
               timer: setTimeout(function() { self.dblClickTimers = []; }, 500)
             });
@@ -222,35 +225,36 @@
         let lastHovered = this.snapHoveringOver.slice(-1)[0];
         let beforeLastHovered = this.snapHoveringOver.slice(-2)[0];
 
-        switch (lastHovered.object) {
-          case 'canvas':
-            this.updateCamPos(e);
-            break;
-          case 'interior':
-          case 'QTbox':
-            this.updateBoxPos(e);
-            break;
-          case 'title':
-            this.updateBoxPos(e);
-            break;
-          case 'resizer':
-            if (beforeLastHovered.object === 'QTbox') {
-              this.updateBoxDimensions(e);
-            } else {
-              this.updateNoteDimensions(e);
-            }
-            break;
-          case 'QTnote':
-            this.updateNotePos(e);
-            break;
-          default:
-            break;
+        if (lastHovered) {
+          switch (lastHovered.object) {
+            case 'canvas':
+              this.updateCamPos(e);
+              break;
+            case 'interior':
+            case 'QTbox':
+              this.updateBoxPos(e);
+              break;
+            case 'title':
+              this.updateBoxPos(e);
+              break;
+            case 'resizer':
+              if (beforeLastHovered.object === 'QTbox') {
+                this.updateBoxDimensions(e);
+              } else {
+                this.updateNoteDimensions(e);
+              }
+              break;
+            case 'QTnote':
+              this.updateNotePos(e);
+              break;
+            default:
+              break;
+          }
         }
       },
       stopEventHandler() {
         this.removeEventsListeners();
         this.saveChangesInDB();
-        // this.cleanTempData();
       },
       removeEventsListeners() {
         document.removeEventListener("mousemove", this.eventHandler);
@@ -262,13 +266,13 @@
           let newQTnote = this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex];
 
           axios
-            .put('http://192.168.1.145:3050/api/QTnote/'+newQTnote._id, { QTnote: newQTnote });
+            .put(apiUrl +'QTnote/'+newQTnote._id, { QTnote: newQTnote });
 
         } else if (this.tempData.QTboxIndex >= 0) {
           let newQTbox = this.boxes[this.tempData.QTboxIndex];
 
           axios
-            .put('http://192.168.1.145:3050/api/QTbox/'+newQTbox._id, { QTbox: newQTbox });
+            .put(apiUrl +'QTbox/'+newQTbox._id, { QTbox: newQTbox });
 
         }
       },
@@ -310,9 +314,7 @@
       },
       setAsHovered(something) {
         if (something.object === 'canvas') {
-          if (this.hoveringOver.length !== 1) {
-            this.hoveringOver.push(something);
-          }
+          this.hoveringOver = [something];
         } else {
           this.hoveringOver.push(something);
         }
@@ -354,28 +356,60 @@
           case 'title':
             this.openTitleEditor();
             break;
+          
+          case 'QTnote':
+            this.openInfoEditor();
+            break;
         
           default:
             break;
         }
 
-
-        // this.cleanTempData();
         this.removeEventsListeners();
       },
       createQTbox(mousePos) {
         let newQTbox = {pos: mousePos};
 
         axios
-          .post('http://192.168.1.145:3050/api/'+ this.QTpageID +'/QTbox/', { QTbox: newQTbox })
+          .post(apiUrl +''+ this.QTpageID +'/QTbox/', { QTbox: newQTbox })
           .then(response => this.boxes.push(response.data));
+      },
+      deleteQTbox() {
+        let QTboxIndex = this.tempData.QTboxIndex;
+
+        axios
+          .delete(apiUrl +''+ this.QTpageID +'/QTbox/' + this.boxes[QTboxIndex]._id)
+          .then(response => {
+            if (response.data.deleted) {
+              this.boxes.splice(QTboxIndex, 1);
+            } else {
+              console.log('something went wrong');
+            }
+          });
+      },
+      deleteQTnote() {
+        let QTboxIndex = this.tempData.QTboxIndex;
+        let QTnoteIndex = this.tempData.QTnoteIndex;
+        
+        let QTboxID = this.boxes[QTboxIndex]._id;
+        let QTnoteID = this.boxes[QTboxIndex].QTnotes[QTnoteIndex]._id;
+
+        axios
+          .delete(apiUrl +''+ QTboxID +'/QTnote/'+ QTnoteID)
+          .then(response => {
+            if (response.data.deleted) {
+              this.boxes[QTboxIndex].QTnotes.splice(QTnoteIndex, 1);
+            } else {
+              console.log('something went wrong');
+            }
+          });
       },
       createQTnote(QTboxID, pos, QTboxIndex) {
 
         let newQTnote = { pos: { x: pos.x, y: pos.y, z: 6 } };
 
         axios
-          .post('http://192.168.1.145:3050/api/'+ QTboxID +'/QTnote/', { QTnote: newQTnote })
+          .post(apiUrl +''+ QTboxID +'/QTnote/', { QTnote: newQTnote })
           .then(response => this.boxes[QTboxIndex].QTnotes.push(response.data));
       },
       openContextMenu(e) {
@@ -407,9 +441,18 @@
         this.cleanTempData();
       },
       contextMenuHandler(option) {
-        // console.log(option);
-        
         switch (option.target.object) {
+          case 'QTnote':
+            switch (option.option) {
+              case 'delete':
+                // console.log(this.tempData);
+                // console.log(this.boxes[this.tempData.QTboxIndex].QTnotes[this.tempData.QTnoteIndex]._id);
+                this.deleteQTnote();
+                break;
+              default:
+                break;
+            }
+            break;
           case 'QTbox':
             switch (option.option) {
               case 'add':
@@ -427,7 +470,10 @@
 
                 this.createQTnote(this.boxes[this.tempData.QTboxIndex]._id, pos, this.tempData.QTboxIndex);
                 break;
-            
+              case 'delete':
+                console.log(this.boxes[this.tempData.QTboxIndex]._id);
+                this.deleteQTbox();
+                break;
               default:
                 break;
             }
@@ -465,20 +511,52 @@
       openTitleEditor() {
         this.showTitleEditor = true;
         this.snapTitleEditor = [ ...this.hoveringOver ];
-        this.hoveringOver = [];
         document.addEventListener('mousedown', this.closeTitleEditor);
       },
       closeTitleEditor() {
         if (this.hoveringOver.length === 0) {
+          this.showTitleEditor = false;
+          document.removeEventListener('mousedown', this.closeTitleEditor);
 
+          this.snapHoveringOver = this.snapTitleEditor;
+          this.prepareTempVars();
+          this.saveChangesInDB();
+          this.snapTitleEditor = [];
         } else {
-          if (this.hoveringOver.slice(-1)[0].object !== 'title') {
+          if (this.hoveringOver.slice(-1)[0].object !== 'title' || this.hoveringOver.slice(-1)[0]._id !== this.snapTitleEditor.slice(-1)[0]._id) {
             this.showTitleEditor = false;
             document.removeEventListener('mousedown', this.closeTitleEditor);
 
             this.snapHoveringOver = this.snapTitleEditor;
             this.prepareTempVars();
             this.saveChangesInDB();
+            this.snapTitleEditor = [];
+          }
+        }
+      },
+      openInfoEditor() {
+        this.showInfoEditor = true;
+        this.snapInfoEditor = [ ...this.hoveringOver ];
+        document.addEventListener('mousedown', this.closeInfoEditor);
+      },
+      closeInfoEditor() {
+        if (this.hoveringOver.length === 0) {
+          this.showInfoEditor = false;
+          document.removeEventListener('mousedown', this.closeInfoEditor);
+
+          this.snapHoveringOver = this.snapInfoEditor;
+          this.prepareTempVars();
+          this.saveChangesInDB();
+          this.snapInfoEditor = [];
+        } else {
+          if (this.hoveringOver.slice(-1)[0].object !== 'QTnote' || this.hoveringOver.slice(-1)[0]._id !== this.snapInfoEditor.slice(-1)[0]._id) {
+            this.showInfoEditor = false;
+            document.removeEventListener('mousedown', this.closeInfoEditor);
+
+            this.snapHoveringOver = this.snapInfoEditor;
+            this.prepareTempVars();
+            this.saveChangesInDB();
+            this.snapInfoEditor = [];
           }
         }
       }
@@ -512,12 +590,10 @@
       <p>hoveringOver: {{ hoveringOver }}</p>
       <p>snapHoveringOver: {{ snapHoveringOver }}</p>
       <p>tempData: {{ tempData }}</p>
-      <!-- <p>X: {{ cameraModded.x }}</p> -->
-      <!-- <p>Y: {{ cameraModded.y }}</p> -->
 
       <QTbackground :camera="cameraModded" />
 
-      <QTbox v-for="box in boxes" :box :camera="cameraModded" :key="box._id" @entered="setAsHovered" @leaved="deleteAsHovered" :writable="showTitleEditor" />
+      <QTbox v-for="box in boxes" :box :camera="cameraModded" :key="box._id" @entered="setAsHovered" @leaved="deleteAsHovered" :titleWritable="showTitleEditor" :snapTitleEditor :infoWritable="showInfoEditor" :snapInfoEditor />
 
       <!-- <QTline :camera="cameraModded" :line="line2"/> -->
       <!-- <QTtitleEditor v-if="showTitleEditor" :camera="cameraModded" :QTbox="boxes[2]" @mouseenter="removeEventListenerTitleEditor" @mouseleave="addEventListenerTitleEditor" /> -->

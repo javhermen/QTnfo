@@ -66,6 +66,17 @@ class ApiController {
   }
 
 
+  static async deleteQTbox(req, res) {
+    const { QTpageID, QTboxID } = req.params;
+    TableController.deleteQTbox(res, QTpageID, QTboxID);
+  }
+
+  static async deleteQTnote(req, res) {
+    const { QTboxID, QTnoteID } = req.params;
+    TableController.deleteQTnote(res, QTboxID, QTnoteID);
+  }
+
+
 
   static async reset(req, res) {
     TableController.reset(res);

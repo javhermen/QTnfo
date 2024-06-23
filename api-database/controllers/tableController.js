@@ -203,6 +203,60 @@ class TableController {
 	}
 
 
+  static async deleteQTbox(res, QTpageID, QTboxID) {
+		try {
+      const QTboxes = this.getModel('QTboxes');
+      const QTbox = await QTboxes.findOne({_id: QTboxID});
+
+      const QTnotes = this.getModel('QTnotes');
+
+      for (let i = 0; i < QTbox.QTnotes.length; i++) {
+        const QTnoteID = QTbox.QTnotes[i];
+
+        await QTnotes.deleteOne({_id: QTnoteID});
+      }
+
+      await QTboxes.deleteOne({ _id: QTboxID });
+
+      const QTpages = this.getModel('QTpages');
+      const QTpage = await QTpages.findOne({_id: QTpageID});
+
+
+      QTpage.QTboxes = QTpage.QTboxes.filter(e => e !== QTboxID);
+
+      await QTpage.save();
+
+      res.json({deleted: 'true'});
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
+  static async deleteQTnote(res, QTboxID, QTnoteID) {
+		try {
+
+      const QTnotes = this.getModel('QTnotes');
+      await QTnotes.deleteOne({_id: QTnoteID});
+
+
+      const QTboxes = this.getModel('QTboxes');
+      const QTbox = await QTboxes.findOne({_id: QTboxID});
+
+      QTbox.QTnotes = QTbox.QTnotes.filter(e => e !== QTnoteID);
+
+      await QTbox.save();
+
+      res.json({deleted: 'true'});
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
+
 
   static async reset(res) {
     try {
@@ -290,7 +344,7 @@ class TableController {
 
       let QTpage = new QTpageModel({
         name: 'pageNameNum',
-        color: '#ffffff',
+        color: '#999999',
         QTboxes: [QTbox1._id, QTbox2._id],
         QTconnections: [QTconnection._id]
       });

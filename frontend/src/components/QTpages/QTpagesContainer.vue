@@ -1,6 +1,7 @@
 <script>
   import QTcontextMenu from '../Menus/QTcontextMenu.vue'
   import QTpage from './QTpage.vue'
+  import apiUrl from '../../assets/apiUrl'
   import axios from 'axios';
 
   export default {
@@ -25,7 +26,7 @@
     beforeCreate() {
       axios
         // .get('http://localhost:3050/api/'+this.$route.params.QTnotebook+'/pages')
-        .get('http://192.168.1.145:3050/api/'+this.$route.params.QTnotebook+'/QTpages')
+        .get(apiUrl+''+this.$route.params.QTnotebook+'/QTpages')
         .then(response => this.pages = response.data);
     },
     methods: {

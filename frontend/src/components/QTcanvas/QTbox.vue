@@ -17,7 +17,10 @@
     props: {
       box: Object,
       camera: Object,
-      writable: Boolean
+      titleWritable: Boolean,
+      snapTitleEditor: Array,
+      infoWritable: Boolean,
+      snapInfoEditor: Array,
     },
     computed: {
       style() {
@@ -31,12 +34,13 @@
         }
       },
       styleTitle() {
-        if (this.writable) {
+        if (this.titleWritable && this.snapTitleEditor.slice(-1)[0]._id === this.box._id) {
+          setTimeout(() => this.$refs.input.focus(), 1);
           return {
             width: this.box.dimensions.width+'px',
             height: '40px',
             fontSize: '2em',
-            backgroundColor: 'rgba(0,0,0,0)',
+            backgroundColor: 'rgba(0,0,0,0.2)',
             border: 'none',
             color: 'var(--text-color)',
             textAlign: 'center',
@@ -58,7 +62,7 @@
         }
       },
       styleBlocker() {
-        if (this.writable) {
+        if (this.titleWritable && this.snapTitleEditor.slice(-1)[0]._id === this.box._id) {
           return {
             width: 0+'px',
             height: '0px',
@@ -79,15 +83,14 @@
 
 <template>
   <div :id="box._id" class="box" :style @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')">
-  <!-- <div :id="box._id" class="box" :style @mousedown.left="drag" @mousedown.middle="stopDrag" @mouseup="stopDrag" @mouseenter="$emit('entered', { object: 'QTbox', _id: this.box._id })" @mouseleave="$emit('leaved')"> -->
     <!-- <h1 @mouseenter="$emit('entered', { object: 'title', _id: this.box._id })" @mouseleave="$emit('leaved')">{{ box.title }}</h1> -->
     <div class="title" @mouseenter="$emit('entered', { object: 'title', _id: this.box._id })" @mouseleave="$emit('leaved')">
-      <div v-if="!writable" class="blocker" :style="styleBlocker" ></div>
-      <input :style="styleTitle"  v-model="box.title" :readonly="!writable" ></input>
+      <div class="titleBlocker" :style="styleBlocker" ></div>
+      <input ref="input" :style="styleTitle" onfocus="this.select();" v-model="box.title" :readonly="!titleWritable" ></input>
     </div>
 
     <div class="interior" style="overflow: hidden; position: relative;" @mouseenter="$emit('entered', { object: 'interior', _id: this.box._id })" @mouseleave="$emit('leaved')">
-      <QTnote v-for="note in box.QTnotes" :note :key="note._id" @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" />
+      <QTnote v-for="note in box.QTnotes" :note :key="note._id" @entered="(something) => $emit('entered', something)" @leaved="() => $emit('leaved')" :infoWritable :snapInfoEditor />
 
       <QTbackground />
     </div>
@@ -138,7 +141,7 @@
     border-radius: 10px;
   }
 
-  div.blocker {
+  div.titleBlocker {
     position: absolute;
 
     top: 0;
@@ -151,13 +154,6 @@
 
   .box>h1 {
     text-align: center;
-    user-select: none;
-  }
-
-
-  p {
-    margin: 10px;
-    margin-left: 15px;
     user-select: none;
   }
 

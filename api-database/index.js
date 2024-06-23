@@ -36,6 +36,9 @@ app.put('/api/QTnote/:QTnoteID', ApiController.putQTnote);
 app.post('/api/:QTpageID/QTbox/', ApiController.postQTbox);
 app.post('/api/:QTboxID/QTnote/', ApiController.postQTnote);
 
+app.delete('/api/:QTpageID/QTbox/:QTboxID', ApiController.deleteQTbox);
+app.delete('/api/:QTboxID/QTnote/:QTnoteID', ApiController.deleteQTnote);
+
 
 app.get('/api/reset', ApiController.reset);
 

@@ -1,6 +1,7 @@
 <script>
   import QTcontextMenu from '../Menus/QTcontextMenu.vue'
   import QTnotebook from './QTnotebook.vue'
+  import apiUrl from '../../assets/apiUrl'
   import axios from 'axios';
 
   export default {
@@ -25,7 +26,7 @@
     beforeCreate() {
       axios
         // .get('http://localhost:3050/api/QTnotebooks')
-        .get('http://192.168.1.145:3050/api/QTnotebooks')
+        .get(apiUrl+'QTnotebooks')
         .then(response => this.notebooks = response.data);
     },
     methods: {
@@ -42,9 +43,6 @@
   <div id="notebooksContainer">
     <div class="int">
       <ul class="notebooks">
-        <li>
-          <QTnotebook :notebook="{ name: 'New Notebook', color: '#333333', static: true}" />
-        </li>
         <li v-for="notebook in notebooks">
           <QTnotebook :notebook />
         </li>
