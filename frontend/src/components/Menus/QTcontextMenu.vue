@@ -8,6 +8,12 @@
         QTnotebookOptions: [
           {text: 'Delete QTnotebook', option: 'delete', target: { object: 'QTnotebook', _id: '' }},
         ],
+        QTpageBackgroundOptions: [
+          {text: 'Add QTpage', option: 'add', target: { object: 'QTpageBackground' }},
+        ],
+        QTpageOptions: [
+          {text: 'Delete QTpage', option: 'delete', target: { object: 'QTpage', _id: '' }},
+        ],
         QTcanvasOptions: [
           {text: 'Add QTbox', option: 'add', target: { object: 'canvas' }},
         ],
@@ -58,6 +64,20 @@
               }
 
               result.unshift(filledQTnotebookOptions);
+              break;
+            case 'QTpageBackground':
+              result.unshift(this.QTpageBackgroundOptions);
+              break;
+            case 'QTpage':
+              let filledQTpageOptions = [...this.QTpageOptions];
+
+              let QTpageID = element._id;
+
+              for (let j = 0; j < filledQTpageOptions.length; j++) {
+                filledQTpageOptions[j].target._id = QTpageID;
+              }
+
+              result.unshift(filledQTpageOptions);
               break;
             case 'QTbox':
               let filledQTboxOptions = [...this.QTboxOptions];

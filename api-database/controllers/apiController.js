@@ -22,6 +22,12 @@ class ApiController {
   }
 
 
+  static async validateQTnotebookTitle(req, res) {
+    const { title } = req.params;
+    TableController.validateQTnotebookTitle(res, title);
+  }
+
+
   static async getAllNotebooks(req, res) {
     TableController.getAll(res, 'QTnotebooks');
   }
@@ -59,6 +65,12 @@ class ApiController {
     TableController.insertQTnotebook(res, QTnotebook);
   }
 
+  static async postQTpage(req, res) {
+    const { QTnotebookID } = req.params;
+    const QTpage = req.body.QTpage;
+    TableController.insertQTpage(res, QTnotebookID, QTpage);
+  }
+
   static async postQTbox(req, res) {
     const { QTpageID } = req.params;
     const QTbox = req.body.QTbox;
@@ -71,6 +83,16 @@ class ApiController {
     TableController.insertQTnote(res, QTboxID, QTnote);
   }
 
+
+  static async deleteQTnotebook(req, res) {
+    const { QTnotebookID } = req.params;
+    TableController.deleteQTnotebook(res, QTnotebookID);
+  }
+
+  static async deleteQTpage(req, res) {
+    const { QTnotebookID, QTpageID } = req.params;
+    TableController.deleteQTpage(res, QTnotebookID, QTpageID);
+  }
 
   static async deleteQTbox(req, res) {
     const { QTpageID, QTboxID } = req.params;

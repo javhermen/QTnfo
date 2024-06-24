@@ -25,6 +25,8 @@ app.get('/', ApiController.help);
 app.get('/api', ApiController.help);
 
 
+app.get('/api/QTnotebooks/validateTitle/:title', ApiController.validateQTnotebookTitle);
+
 app.get('/api/QTnotebooks', ApiController.getAllNotebooks);
 app.get('/api/QTnotebooks/populated', ApiController.getAllnotebooksPopulated);
 app.get('/api/:QTnotebook/QTpages', ApiController.getNotebookPages);
@@ -33,10 +35,13 @@ app.get('/api/:QTnotebook/:QTpage', ApiController.getNotebookPage);
 app.put('/api/QTbox/:QTboxID', ApiController.putQTbox);
 app.put('/api/QTnote/:QTnoteID', ApiController.putQTnote);
 
-app.post('/api/QTnotebook/', ApiController.postQTnotebook);
-app.post('/api/:QTpageID/QTbox/', ApiController.postQTbox);
-app.post('/api/:QTboxID/QTnote/', ApiController.postQTnote);
+app.post('/api/QTnotebook', ApiController.postQTnotebook);
+app.post('/api/:QTnotebookID/QTpage', ApiController.postQTpage);
+app.post('/api/:QTpageID/QTbox', ApiController.postQTbox);
+app.post('/api/:QTboxID/QTnote', ApiController.postQTnote);
 
+app.delete('/api/:QTnotebookID', ApiController.deleteQTnotebook);
+app.delete('/api/:QTnotebookID/QTpage/:QTpageID', ApiController.deleteQTpage);
 app.delete('/api/:QTpageID/QTbox/:QTboxID', ApiController.deleteQTbox);
 app.delete('/api/:QTboxID/QTnote/:QTnoteID', ApiController.deleteQTnote);
 

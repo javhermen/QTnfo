@@ -71,6 +71,8 @@
     transition: transform 1s;
 
     text-decoration: none;
+
+    user-select: none;
   }
 
   a.notebook:hover {

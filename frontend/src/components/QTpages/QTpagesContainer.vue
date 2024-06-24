@@ -1,5 +1,7 @@
 <script>
   import QTcontextMenu from '../Menus/QTcontextMenu.vue'
+  import QTdeleteModal from '../Menus/QTdeleteModal.vue'
+  import QTcreateModal from '../Menus/QTcreateModal.vue'
   import QTpage from './QTpage.vue'
   import apiUrl from '../../assets/apiUrl'
   import axios from 'axios';
@@ -7,33 +9,132 @@
   export default {
     data() {
       return {
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11],
+        QTnotebookID: null,
         pages: null,
         showContextMenu: false,
+        showCreateModal: false,
         contextMenuX: 0,
-        contextMenuY: 0
+        contextMenuY: 0,
+        showDeleteModal: false,
+        hoveringOver: [],
+        snapHoveringOver: [],
+        QTpageID: null,
+        invalidNameResponse: false
       }
     },
     components: {
       QTcontextMenu,
-      QTpage
+      QTdeleteModal,
+      QTcreateModal,
+      QTpage,
     },
     beforeCreate() {
       axios
         // .get('http://localhost:3050/api/'+this.$route.params.QTnotebook+'/pages')
         .get(apiUrl+''+this.$route.params.QTnotebook+'/QTpages')
-        .then(response => this.pages = response.data);
+        .then(response => {
+          this.pages = response.data.QTpages;
+          this.QTnotebookID = response.data._id
+        });
     },
     methods: {
-      showQTcontextMenu(event) {
+      setAsHovered(something) {
+        if (something.object === 'QTpageBackground') {
+          this.hoveringOver = [something];
+        } else {
+          this.hoveringOver.push(something);
+        }
+      },
+      deleteAsHovered() {
+        this.hoveringOver.pop();
+      },
+      openContextMenu(e) {
+
+        this.snapHoveringOver = [...this.hoveringOver];
+
         this.showContextMenu = true;
-        this.contextMenuX = event.clientX;
-        this.contextMenuY = event.clientY;
+        this.contextMenuX = e.clientX;
+        this.contextMenuY = e.clientY;
+
+        document.addEventListener("mousedown", this.closeContextMenu);
+        
+      },
+      closeContextMenu(e) {
+        if (e) {
+          if (this.detectLeftButton(e)) {
+            this.showContextMenu = false;
+            document.removeEventListener("mousedown", this.closeContextMenu);
+          }
+        } else {
+          this.showContextMenu = false;
+          document.removeEventListener("mousedown", this.closeContextMenu);
+        }
+      },
+      detectLeftButton(evt) {
+        evt = evt || window.event;
+        if ("buttons" in evt) {
+          return evt.buttons == 1;
+        }
+        var button = evt.which || evt.button;
+        return button == 1;
+      },
+      contextMenuHandler(option) {
+        switch (option.target.object) {
+          case 'QTpageBackground':
+            switch (option.option) {
+              case 'add':
+                this.showCreateModal = true;
+                break;
+            
+              default:
+                break;
+            }
+            break;
+          case 'QTpage':
+            switch (option.option) {
+              case 'delete':
+                this.QTpageID = option.target._id;
+                this.showDeleteModal = true;
+                break;
+              default:
+                break;
+            }
+            break;
+          default:
+            break;
+        }
+      },
+      addQTpage(input) {
+
+        axios
+          .post(apiUrl + this.QTnotebookID + '/QTpage', { QTpage: { name: input } })
+          .then(response => {
+            if (response.data.invalidName) {
+              this.invalidNameResponse = true;
+            } else {
+              this.showCreateModal = false;
+              this.invalidNameResponse = false;
+              this.pages.push(response.data);
+            }
+          });
+
+      },
+      deleteQTpage() {
+        this.showDeleteModal = false;
+
+        let QTpageID = this.QTpageID;
+
+        axios
+          .delete(apiUrl +''+this.QTnotebookID+'/QTpage/'+ QTpageID)
+          .then(response => {
+            if (response.data.deleted) {
+              this.pages = this.pages.filter(e => e._id !== QTpageID)
+            } else {
+              console.log('something went wrong');
+            }
+          });
+
+        this.QTpageID = null;
       }
     }
   }
@@ -41,16 +142,20 @@
 
 <template>
   <div id="pagesContainer">
-    <div class="int">
+    <div class="int" @mousedown.right="closeContextMenu()" @contextmenu.prevent="openContextMenu" @mouseenter="setAsHovered( { object: 'QTpageBackground'} )" @mouseleave="deleteAsHovered()">
       <ul class="pages">
         <li v-for="page in pages">
-          <QTpage :page />
+          <QTpage :page @mouseenter="setAsHovered( { object: 'QTpage', _id: page._id } )" @mouseleave="deleteAsHovered()"/>
         </li>
       </ul>
     </div>
   </div>
 
-  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" ></QTcontextMenu>
+  <QTcreateModal v-if="showCreateModal" @ignored="showCreateModal = false" @accepted="addQTpage" @declined="showCreateModal = false" :invalidNameResponse :message="'What will be the name for the new QTpage?'" />
+
+  <QTdeleteModal v-if="showDeleteModal" @ignored="showDeleteModal = false" @accepted="deleteQTpage" @declined="showDeleteModal = false" :message="'Are you sure that you want to delete this QTpage?'" />
+
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" :snapHoveringOver @optionPressed="contextMenuHandler" @mouseenter="setAsHovered( { object: 'QTpageBackground'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
 </template>
 
 <style>

@@ -587,9 +587,9 @@
 <template>
   <div id="main">
     <div class="int" ref="int" @mouseenter="setAsHovered( { object: 'canvas'} )" @mouseleave="deleteAsHovered()" @mousedown.left="clickHandler" @mousedown.right="closeContextMenu()" @contextmenu.prevent="openContextMenu">
-      <p>hoveringOver: {{ hoveringOver }}</p>
+      <!-- <p>hoveringOver: {{ hoveringOver }}</p>
       <p>snapHoveringOver: {{ snapHoveringOver }}</p>
-      <p>tempData: {{ tempData }}</p>
+      <p>tempData: {{ tempData }}</p> -->
 
       <QTbackground :camera="cameraModded" />
 

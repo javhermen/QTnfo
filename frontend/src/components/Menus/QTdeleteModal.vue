@@ -15,7 +15,10 @@
     <div class="outside" @mousedown.left="$emit('ignored')" ></div>
     <div id="deleteModal">
       <p class="message" >{{ message }}</p>
-      <div class="buttons" ><span class="yesOption" @mousedown.left="$emit('accepted')" >yes</span><span class="noOption" @mousedown.left="$emit('declined')" >no</span></div>
+      <div class="buttons">
+        <span class="yesOption" @mousedown.left="$emit('accepted')" >yes</span>
+        <span class="noOption" @mousedown.left="$emit('declined')" >no</span>
+      </div>
     </div>
   </div>
 </template>
@@ -30,8 +33,6 @@
   bottom: 0;
   left: 0;
   right: 0;
-
-
   overflow: hidden;
 }
 
@@ -65,7 +66,7 @@
   overflow: hidden;
 }
 
-.message {
+#deleteModal .message {
   /* border: solid black 1px; */
   padding: 20px;
 
@@ -81,17 +82,19 @@
   user-select: none;
 }
 
-.buttons {
+#deleteModal .buttons {
   display: flex;
 
   width: 100%;
 
   height: 50px;
 
+  cursor: pointer;
+
   /* background-color: rgb(191, 0, 255); */
 }
 
-.buttons>span {
+#deleteModal .buttons>span {
   width: 50%;
   height: 100%;
 
@@ -105,21 +108,21 @@
   user-select: none;
 }
 
-.yesOption {
+#deleteModal .yesOption {
   background-color: rgba(255, 0, 0, 0.5);
   transition: background-color 0.4s;
 }
 
-.noOption {
+#deleteModal .noOption {
   background-color: rgba(0, 0, 0, 0.3);
   transition: background-color 0.4s;
 }
 
-.yesOption:hover {
+#deleteModal .yesOption:hover {
   background-color: rgba(255, 0, 0, 1);
 }
 
-.noOption:hover {
+#deleteModal .noOption:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
 

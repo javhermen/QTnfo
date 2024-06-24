@@ -1,6 +1,7 @@
 <script>
   import QTcontextMenu from '../Menus/QTcontextMenu.vue'
   import QTdeleteModal from '../Menus/QTdeleteModal.vue'
+  import QTcreateModal from '../Menus/QTcreateModal.vue'
   import QTnotebook from './QTnotebook.vue'
   import apiUrl from '../../assets/apiUrl'
   import axios from 'axios';
@@ -8,26 +9,23 @@
   export default {
     data() {
       return {
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11,12],
-        // notebooks: [1,2,3,4,5,6,7,8,9,10,11],
         notebooks: null,
         showContextMenu: false,
         showDeleteModal: false,
+        showCreateModal: false,
         contextMenuX: 0,
         contextMenuY: 0,
         hoveringOver: [],
         snapHoveringOver: [],
         QTnotebookID: null,
+        invalidNameResponse: false
       }
     },
     components: {
       QTcontextMenu,
       QTnotebook,
-      QTdeleteModal
+      QTdeleteModal,
+      QTcreateModal
     },
     beforeCreate() {
       axios
@@ -83,7 +81,7 @@
           case 'QTnotebookBackground':
             switch (option.option) {
               case 'add':
-                this.addQTnotebook();
+                this.showCreateModal = true;
                 break;
             
               default:
@@ -104,11 +102,37 @@
             break;
         }
       },
-      addQTnotebook() {
-        this.showDeleteModal = false;
+      addQTnotebook(input) {
+
+        axios
+          .post(apiUrl +'QTnotebook', { QTnotebook: { name: input } })
+          .then(response => {
+            if (response.data.invalidName) {
+              this.invalidNameResponse = true;
+            } else {
+              this.showCreateModal = false;
+              this.invalidNameResponse = false;
+              this.notebooks.push(response.data);
+            }
+          });
+
       },
       deleteQTnotebook() {
         this.showDeleteModal = false;
+
+        let QTnotebookID = this.QTnotebookID;
+
+        axios
+          .delete(apiUrl +''+ QTnotebookID)
+          .then(response => {
+            if (response.data.deleted) {
+              this.notebooks = this.notebooks.filter(e => e._id !== QTnotebookID)
+            } else {
+              console.log('something went wrong');
+            }
+          });
+        
+        this.QTnotebookID = null;
       }
     }
   }
@@ -125,7 +149,9 @@
     </div>
   </div>
 
-  <QTdeleteModal v-if="showDeleteModal" @ignored="console.log('ignored')" @accepted="deleteQTnotebook" @declined="console.log('declined')" :message="'Are you sure that you want to delete this QTnotebook?'" ></QTdeleteModal>
+  <QTcreateModal v-if="showCreateModal" @ignored="showCreateModal = false" @accepted="addQTnotebook" @declined="showCreateModal = false" :invalidNameResponse :message="'What will be the name for the new QTnotebook?'" />
+
+  <QTdeleteModal v-if="showDeleteModal" @ignored="showDeleteModal = false" @accepted="deleteQTnotebook" @declined="showDeleteModal = false" :message="'Are you sure that you want to delete this QTnotebook?'" />
 
   <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" :snapHoveringOver @optionPressed="contextMenuHandler" @mouseenter="setAsHovered( { object: 'QTnotebookBackground'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
 </template>
