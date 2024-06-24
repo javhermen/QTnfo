@@ -1,5 +1,6 @@
 <script>
   import QTcontextMenu from '../Menus/QTcontextMenu.vue'
+  import QTdeleteModal from '../Menus/QTdeleteModal.vue'
   import QTnotebook from './QTnotebook.vue'
   import apiUrl from '../../assets/apiUrl'
   import axios from 'axios';
@@ -15,13 +16,18 @@
         // notebooks: [1,2,3,4,5,6,7,8,9,10,11],
         notebooks: null,
         showContextMenu: false,
+        showDeleteModal: false,
         contextMenuX: 0,
-        contextMenuY: 0
+        contextMenuY: 0,
+        hoveringOver: [],
+        snapHoveringOver: [],
+        QTnotebookID: null,
       }
     },
     components: {
       QTcontextMenu,
-      QTnotebook
+      QTnotebook,
+      QTdeleteModal
     },
     beforeCreate() {
       axios
@@ -30,10 +36,79 @@
         .then(response => this.notebooks = response.data);
     },
     methods: {
-      showQTcontextMenu(event) {
+      setAsHovered(something) {
+        if (something.object === 'QTnotebookBackground') {
+          this.hoveringOver = [something];
+        } else {
+          this.hoveringOver.push(something);
+        }
+      },
+      deleteAsHovered() {
+        this.hoveringOver.pop();
+      },
+      openContextMenu(e) {
+
+        this.snapHoveringOver = [...this.hoveringOver];
+
         this.showContextMenu = true;
-        this.contextMenuX = event.clientX;
-        this.contextMenuY = event.clientY;
+        this.contextMenuX = e.clientX;
+        this.contextMenuY = e.clientY;
+
+        document.addEventListener("mousedown", this.closeContextMenu);
+        
+      },
+      closeContextMenu(e) {
+        if (e) {
+          if (this.detectLeftButton(e)) {
+            this.showContextMenu = false;
+            document.removeEventListener("mousedown", this.closeContextMenu);
+          }
+        } else {
+          this.showContextMenu = false;
+          document.removeEventListener("mousedown", this.closeContextMenu);
+        }
+
+        // this.snapHoveringOver = [];
+      },
+      detectLeftButton(evt) {
+        evt = evt || window.event;
+        if ("buttons" in evt) {
+          return evt.buttons == 1;
+        }
+        var button = evt.which || evt.button;
+        return button == 1;
+      },
+      contextMenuHandler(option) {
+        switch (option.target.object) {
+          case 'QTnotebookBackground':
+            switch (option.option) {
+              case 'add':
+                this.addQTnotebook();
+                break;
+            
+              default:
+                break;
+            }
+            break;
+          case 'QTnotebook':
+            switch (option.option) {
+              case 'delete':
+                this.QTnotebookID = option.target._id;
+                this.showDeleteModal = true;
+                break;
+              default:
+                break;
+            }
+            break;
+          default:
+            break;
+        }
+      },
+      addQTnotebook() {
+        this.showDeleteModal = false;
+      },
+      deleteQTnotebook() {
+        this.showDeleteModal = false;
       }
     }
   }
@@ -41,16 +116,18 @@
 
 <template>
   <div id="notebooksContainer">
-    <div class="int">
+    <div class="int" @mousedown.right="closeContextMenu()" @contextmenu.prevent="openContextMenu" @mouseenter="setAsHovered( { object: 'QTnotebookBackground'} )" @mouseleave="deleteAsHovered()">
       <ul class="notebooks">
         <li v-for="notebook in notebooks">
-          <QTnotebook :notebook />
+          <QTnotebook :notebook @mouseenter="setAsHovered( { object: 'QTnotebook', _id: notebook._id } )" @mouseleave="deleteAsHovered()"/>
         </li>
       </ul>
     </div>
   </div>
 
-  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" ></QTcontextMenu>
+  <QTdeleteModal v-if="showDeleteModal" @ignored="console.log('ignored')" @accepted="deleteQTnotebook" @declined="console.log('declined')" :message="'Are you sure that you want to delete this QTnotebook?'" ></QTdeleteModal>
+
+  <QTcontextMenu v-if="showContextMenu" :x="contextMenuX" :y="contextMenuY" :snapHoveringOver @optionPressed="contextMenuHandler" @mouseenter="setAsHovered( { object: 'QTnotebookBackground'} )" @mouseleave="deleteAsHovered()" ></QTcontextMenu>
 </template>
 
 <style>

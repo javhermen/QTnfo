@@ -103,9 +103,10 @@
     max-height: 60px;
     /* overflow: hidden; */
     /* color: aliceblue; */
+    color: var(--color-text);
     text-decoration: none;
 
-    filter: invert(1);
+    /* filter: invert(1); */
 
     line-height: 1em;
   }

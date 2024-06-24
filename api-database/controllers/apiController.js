@@ -40,6 +40,7 @@ class ApiController {
     TableController.getNotebookPage(res, QTnotebook, QTpage);
   }
 
+
   static async putQTbox(req, res) {
     const { QTboxID } = req.params;
     const QTbox = req.body.QTbox;
@@ -52,6 +53,11 @@ class ApiController {
     TableController.updateQTnote(res, QTnoteID, QTnote);
   }
 
+
+  static async postQTnotebook(req, res) {
+    const QTnotebook = req.body.QTnotebook;
+    TableController.insertQTnotebook(res, QTnotebook);
+  }
 
   static async postQTbox(req, res) {
     const { QTpageID } = req.params;

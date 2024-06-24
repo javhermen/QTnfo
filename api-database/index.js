@@ -33,6 +33,7 @@ app.get('/api/:QTnotebook/:QTpage', ApiController.getNotebookPage);
 app.put('/api/QTbox/:QTboxID', ApiController.putQTbox);
 app.put('/api/QTnote/:QTnoteID', ApiController.putQTnote);
 
+app.post('/api/QTnotebook/', ApiController.postQTnotebook);
 app.post('/api/:QTpageID/QTbox/', ApiController.postQTbox);
 app.post('/api/:QTboxID/QTnote/', ApiController.postQTnote);
 

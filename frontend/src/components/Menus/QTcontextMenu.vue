@@ -2,6 +2,12 @@
   export default {
     data() {
       return {
+        QTnotebookBackgroundOptions: [
+          {text: 'Add QTnotebook', option: 'add', target: { object: 'QTnotebookBackground' }},
+        ],
+        QTnotebookOptions: [
+          {text: 'Delete QTnotebook', option: 'delete', target: { object: 'QTnotebook', _id: '' }},
+        ],
         QTcanvasOptions: [
           {text: 'Add QTbox', option: 'add', target: { object: 'canvas' }},
         ],
@@ -29,13 +35,30 @@
     },
     computed: {
       optionsPacks() {
-        let result = [this.QTcanvasOptions];
+        let result = [];
         let QTboxID = '';
 
         for (let i = 0; i < this.snapHoveringOver.length; i++) {
           const element = this.snapHoveringOver[i];
           
           switch (element.object) {
+            case 'canvas': 
+              result.unshift(this.QTcanvasOptions);
+              break;
+            case 'QTnotebookBackground':
+              result.unshift(this.QTnotebookBackgroundOptions);
+              break;
+            case 'QTnotebook':
+              let filledQTnotebookOptions = [...this.QTnotebookOptions];
+
+              let QTnotebookID = element._id;
+
+              for (let j = 0; j < filledQTnotebookOptions.length; j++) {
+                filledQTnotebookOptions[j].target._id = QTnotebookID;
+              }
+
+              result.unshift(filledQTnotebookOptions);
+              break;
             case 'QTbox':
               let filledQTboxOptions = [...this.QTboxOptions];
 

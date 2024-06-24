@@ -9,30 +9,12 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/settings',
-      name: 'settings',
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/new_notebook',
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      path: '/:QTnotebook/new_page',
-      component: () => import('../views/AboutView.vue')
-    },
-    {
       path: '/:QTnotebook',
       component: () => import('../views/PagesView.vue')
     },
     {
       path: '/:QTnotebook/:QTpage',
       component: () => import('../views/CanvasViewerView.vue')
-    },
-    {
-      path: '/phone',
-      name: 'phone',
-      component: () => import('../views/PhoneView.vue')
     }
   ]
 })

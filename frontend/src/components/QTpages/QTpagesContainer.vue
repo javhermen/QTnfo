@@ -43,9 +43,6 @@
   <div id="pagesContainer">
     <div class="int">
       <ul class="pages">
-        <li>
-          <QTpage :page="{ name: 'New Page', color: '#333333', static: true}" />
-        </li>
         <li v-for="page in pages">
           <QTpage :page />
         </li>

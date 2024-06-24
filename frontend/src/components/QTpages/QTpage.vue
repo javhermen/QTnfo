@@ -12,6 +12,7 @@
     computed: {
       style() {
         return {
+          color: this.color,
           backgroundColor: this.color
         }
       },
@@ -108,6 +109,9 @@
   a.page>div.int>div.title>h1 {
     max-height: 60px;
     /* overflow: hidden; */
+
+    color: var(--color-text);
+    text-decoration: none;
 
     line-height: 1em;
   }

@@ -39,7 +39,6 @@
     height: 75px;
     height: 65px;
 
-
     display: flex;
 
     padding: 10px;
@@ -80,6 +79,8 @@
     background-size: cover;
 
     user-select: none;
+
+    color: var(--color-text);
   }
 
   li.link>a>img {
