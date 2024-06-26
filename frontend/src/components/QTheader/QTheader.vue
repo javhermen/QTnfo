@@ -1,5 +1,6 @@
 <script>
   import QTbuttonHeader from './QTbuttonHeader.vue'
+  import QTbreadcrumb from './QTbreadcrumb.vue'
 
   export default {
     data() {
@@ -9,7 +10,8 @@
       }
     },
     components: {
-      QTbuttonHeader
+      QTbuttonHeader,
+      QTbreadcrumb
     },
     methods: {
       switchPos() {
@@ -34,6 +36,7 @@
         <ul>
           <QTbuttonHeader link="/"></QTbuttonHeader>
         </ul>
+        <QTbreadcrumb />
       </div>
       <div class="handle" @mousedown.left="switchPos">
         <div class="gradLeft"></div>
@@ -132,6 +135,12 @@
     overflow: hidden;
 
     transition: margin 0.5s;
+    display: flex;
+
+  }
+
+  .header ul {
+    width: 75px;
   }
 
   ul {
