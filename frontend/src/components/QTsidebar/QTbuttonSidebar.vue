@@ -48,7 +48,6 @@
   }
 
   li.linkSidebar>a {
-
     font-family: "Share Tech Mono", monospace;
     font-weight: 400;
     font-style: normal;
@@ -81,6 +80,13 @@
     user-select: none;
 
     color: var(--color-text);
+
+    transition: transform 1s;
+  }
+
+  li.linkSidebar>a:hover {
+    transition: transform 0.2s;
+    transform: scale(1.05);
   }
 
   li.linkSidebar>a>img {

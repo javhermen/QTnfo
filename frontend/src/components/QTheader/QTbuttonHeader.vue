@@ -45,7 +45,6 @@
   }
 
   li.linkHeader>a {
-
     font-family: "Share Tech Mono", monospace;
     font-weight: 400;
     font-style: normal;
@@ -69,13 +68,17 @@
     overflow: hidden;
 
     box-shadow: inset 0px 0px 7px 1px rgb(43, 48, 54);
-    /* box-shadow: inset 0px 0px 7px 1px rgb(0, 0, 0); */
-
-    /* background-image: url('/001-a.png'); */
 
     background-size: cover;
 
     user-select: none;
+
+    transition: transform 1s;
+  }
+
+  li.linkHeader>a:hover {
+    transition: transform 0.2s;
+    transform: scale(1.05);
   }
 
   li.linkHeader>a>img {

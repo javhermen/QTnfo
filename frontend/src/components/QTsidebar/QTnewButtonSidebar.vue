@@ -53,6 +53,13 @@
     user-select: none;
 
     color: var(--color-text);
+
+    transition: transform 1s;
+  }
+
+  li.newFavorite>div:hover {
+    transition: transform 0.2s;
+    transform: scale(1.05);
   }
 
   li.newFavorite>div>img {
