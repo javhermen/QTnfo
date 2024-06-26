@@ -16,6 +16,9 @@ class TableController {
       case 'QTnotes':
         return require('../models/QTnoteModel');
         break;
+      case 'QTfavorites':
+        return require('../models/QTfavoriteModel');
+        break;
     
       default:
         throw new Error('ER_NO_SUCH_TABLE')
@@ -430,12 +433,14 @@ class TableController {
       let QTconnectionModel = this.getModel('QTconnections');
       let QTpageModel = this.getModel('QTpages');
       let QTnotebookModel = this.getModel('QTnotebooks');
+      let QTfavoriteModel = this.getModel('QTfavorites');
 
       let QTnoteDeleted = await QTnoteModel.deleteMany({});
       let QTboxDeleted = await QTboxModel.deleteMany({});
       let QTconnectionDeleted = await QTconnectionModel.deleteMany({});
       let QTpageDeleted = await QTpageModel.deleteMany({});
       let QTnotebookDeleted = await QTnotebookModel.deleteMany({});
+      let QTfavoriteDeleted = await QTfavoriteModel.deleteMany({});
 
 
       let QTnote1 = new QTnoteModel({
@@ -522,6 +527,11 @@ class TableController {
       });
 
 
+      let QTfavorite = new QTfavoriteModel({
+        url: 'notebook/pageNameNum',
+      });
+
+
       QTnote1.save();
       QTnote2.save();
       QTbox1.save();
@@ -529,6 +539,7 @@ class TableController {
       QTconnection.save();
       QTpage.save();
       QTnotebook.save();
+      QTfavorite.save();
 
 
       res.json({reseted: 'true'});
