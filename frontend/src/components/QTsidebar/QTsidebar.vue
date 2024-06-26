@@ -32,7 +32,6 @@
     <div class="aside" :style="hide">
       <ul>
         <QTbuttonSidebar link="/notebook/pageNameNum">1</QTbuttonSidebar>
-        <QTbuttonSidebar link="/phone">2</QTbuttonSidebar>
       </ul>
     </div>
     <div class="handle" @mousedown.left="switchPos">

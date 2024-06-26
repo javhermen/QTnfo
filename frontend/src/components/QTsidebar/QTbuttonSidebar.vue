@@ -13,15 +13,11 @@
 
 <template>
   <li class="link">
-    <!-- <a href="vier"> -->
     <RouterLink :to="link">
       <slot>
         <img src="/home-icon.png" alt="">
       </slot>
     </RouterLink>
-    <!-- <img src="/001-a.png" alt=""> -->
-    
-    <!-- </a> -->
   </li>
 </template>
 
