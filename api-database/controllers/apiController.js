@@ -63,6 +63,18 @@ class ApiController {
     TableController.updateQTnote(res, QTnoteID, QTnote);
   }
 
+  static async putQTnotebook(req, res) {
+    const { QTnotebookID } = req.params;
+    const QTnotebook = req.body.QTnotebook;
+    TableController.updateQTnotebook(res, QTnotebookID, QTnotebook);
+  }
+
+  static async putQTpage(req, res) {
+    const { QTnotebookID, QTpageID } = req.params;
+    const QTpage = req.body.QTpage;
+    TableController.updateQTpage(res, QTnotebookID, QTpageID, QTpage);
+  }
+
   static async putQTfavorite(req, res) {
     const QTfavorite = req.body.QTfavorite;
     TableController.updateQTfavorite(res, QTfavorite);

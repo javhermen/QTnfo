@@ -11,6 +11,7 @@
     props: {
       message: {type: String, default: 'Are you sure that you want to delete this?'},
       invalidNameResponse: {type: Boolean, default: false},
+      renaming: {type: Boolean, default: false},
     },
     methods: {
       accept() {
@@ -35,7 +36,8 @@
 
       <input type="text" name="" id="createInput" v-model="inputValue">
       <div class="buttons" >
-        <span class="yesOption" @mousedown.left="accept" >create</span>
+        <span v-if="!renaming" class="yesOption" @mousedown.left="accept" >create</span>
+        <span v-else class="yesOption renaming" @mousedown.left="accept" >rename</span>
         <span class="noOption" @mousedown.left="$emit('declined', inputValue)" >discard</span>
       </div>
     </div>
@@ -161,6 +163,14 @@
   margin: 25px;
   margin-top: 0px;
   margin-bottom: 25px;
+}
+
+#createModal .renaming {
+  background-color: rgba(127, 255, 212, 0.2);
+}
+
+#createModal .renaming:hover {
+  background-color: rgba(127, 255, 212, 0.5);
 }
 
 </style>

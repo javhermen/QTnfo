@@ -13,6 +13,7 @@
         showContextMenu: false,
         showDeleteModal: false,
         showCreateModal: false,
+        showRenameModal: false,
         contextMenuX: 0,
         contextMenuY: 0,
         hoveringOver: [],
@@ -94,6 +95,10 @@
                 this.QTnotebookID = option.target._id;
                 this.showDeleteModal = true;
                 break;
+              case 'rename':
+                this.QTnotebookID = option.target._id;
+                this.showRenameModal = true;
+                break;
               default:
                 break;
             }
@@ -112,6 +117,22 @@
             } else {
               this.showCreateModal = false;
               this.invalidNameResponse = false;
+              this.notebooks.push(response.data);
+            }
+          });
+
+      },
+      renameQTnotebook(input) {
+
+        axios
+          .put(apiUrl +'QTnotebook/'+this.QTnotebookID, { QTnotebook: { name: input } })
+          .then(response => {
+            if (response.data.invalidName) {
+              this.invalidNameResponse = true;
+            } else {
+              this.showRenameModal = false;
+              this.invalidNameResponse = false;
+              this.notebooks = this.notebooks.filter(e => e._id !== this.QTnotebookID);
               this.notebooks.push(response.data);
             }
           });
@@ -150,6 +171,8 @@
   </div>
 
   <QTcreateModal v-if="showCreateModal" @ignored="showCreateModal = false" @accepted="addQTnotebook" @declined="showCreateModal = false" :invalidNameResponse :message="'What will be the name for the new QTnotebook?'" />
+
+  <QTcreateModal v-if="showRenameModal" @ignored="showRenameModal = false" @accepted="renameQTnotebook" @declined="showRenameModal = false" :renaming="true" :invalidNameResponse :message="'What will be the new name for the old QTnotebook?'" />
 
   <QTdeleteModal v-if="showDeleteModal" @ignored="showDeleteModal = false" @accepted="deleteQTnotebook" @declined="showDeleteModal = false" :message="'Are you sure that you want to delete this QTnotebook?'" />
 

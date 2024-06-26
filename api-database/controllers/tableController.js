@@ -165,12 +165,76 @@ class TableController {
 		}
 	}
 
+  static async updateQTnotebook(res, QTnotebookID, QTnotebook) {
+		try {
+      let model = this.getModel('QTnotebooks');
+      const data = await model.findOne({name: QTnotebook.name});
+
+      if (data === null) {
+        const updated = await model.findOne({_id: QTnotebookID});
+
+        updated.name = QTnotebook.name ? QTnotebook.name : updated.name;
+        updated.color = QTnotebook.color ? QTnotebook.color : updated.color;
+        updated.img = QTnotebook.img ? QTnotebook.img : updated.img;
+        updated.QTpages = QTnotebook.QTpages ? QTnotebook.QTpages : updated.QTpages;
+
+        await updated.save();
+
+        res.json(updated);
+      } else {
+        res.json( { invalidName: true } );
+      }
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
+  static async updateQTpage(res, QTnotebookID, QTpageID, QTpage) {
+		try {
+      let QTpages = this.getModel('QTpages');
+      let QTnotebooks = this.getModel('QTnotebooks');
+      let QTnotebookQTpages = await QTnotebooks.findOne({_id: QTnotebookID}).populate('QTpages');
+
+      QTnotebookQTpages = QTnotebookQTpages.QTpages;
+
+      let validName = true;
+
+      for (let i = 0; i < QTnotebookQTpages.length; i++) {
+        const QTnotebookQTpage = QTnotebookQTpages[i];
+        
+        if (QTnotebookQTpage.name === QTpage.name) {
+          validName = false;
+          break;
+        }
+      }
+
+      if (validName) {
+        const updated = await QTpages.findOne({_id: QTpageID});
+
+        updated.name = QTpage.name ? QTpage.name : updated.name;
+        updated.color = QTpage.color ? QTpage.color : updated.color;
+        updated.QTboxes = QTpage.QTboxes ? QTpage.QTboxes : updated.QTboxes;
+        updated.QTconnections = QTpage.QTconnections ? QTpage.QTconnections : updated.QTconnections;
+
+        await updated.save();
+
+        res.json(updated);
+      } else {
+        res.json( { invalidName: true } );
+      }
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
   static async updateQTfavorite(res, QTfavorite) {
 		try {
       let model = this.getModel('QTfavorites');
       const data = await model.findOne({url: QTfavorite.url});
-
-      console.log(data);
 
       if (data !== null) {
         await model.deleteOne({url: QTfavorite.url});

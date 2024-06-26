@@ -13,6 +13,7 @@
         pages: null,
         showContextMenu: false,
         showCreateModal: false,
+        showRenameModal: false,
         contextMenuX: 0,
         contextMenuY: 0,
         showDeleteModal: false,
@@ -108,6 +109,10 @@
                 this.QTpageID = option.target._id;
                 this.showDeleteModal = true;
                 break;
+              case 'rename':
+                this.QTpageID = option.target._id;
+                this.showRenameModal = true;
+                break;
               default:
                 break;
             }
@@ -126,6 +131,22 @@
             } else {
               this.showCreateModal = false;
               this.invalidNameResponse = false;
+              this.pages.push(response.data);
+            }
+          });
+
+      },
+      renameQTpage(input) {
+
+        axios
+          .put(apiUrl +'QTpage/'+this.QTnotebookID+'/'+this.QTpageID, { QTpage: { name: input } })
+          .then(response => {
+            if (response.data.invalidName) {
+              this.invalidNameResponse = true;
+            } else {
+              this.showRenameModal = false;
+              this.invalidNameResponse = false;
+              this.pages = this.pages.filter(e => e._id !== this.QTpageID);
               this.pages.push(response.data);
             }
           });
@@ -164,6 +185,8 @@
   </div>
 
   <QTcreateModal v-if="showCreateModal" @ignored="showCreateModal = false" @accepted="addQTpage" @declined="showCreateModal = false" :invalidNameResponse :message="'What will be the name for the new QTpage?'" />
+
+  <QTcreateModal v-if="showRenameModal" @ignored="showRenameModal = false" @accepted="renameQTpage" @declined="showRenameModal = false" :renaming="true" :invalidNameResponse :message="'What will be the new name for the old QTpage?'" />
 
   <QTdeleteModal v-if="showDeleteModal" @ignored="showDeleteModal = false" @accepted="deleteQTpage" @declined="showDeleteModal = false" :message="'Are you sure that you want to delete this QTpage?'" />
 

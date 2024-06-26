@@ -35,6 +35,8 @@ app.get('/api/QTfavorites', ApiController.getAllQTfavorite);
 
 app.put('/api/QTbox/:QTboxID', ApiController.putQTbox);
 app.put('/api/QTnote/:QTnoteID', ApiController.putQTnote);
+app.put('/api/QTnotebook/:QTnotebookID', ApiController.putQTnotebook);
+app.put('/api/QTpage/:QTnotebookID/:QTpageID', ApiController.putQTpage);
 app.put('/api/QTfavorite', ApiController.putQTfavorite);
 
 app.post('/api/QTnotebook', ApiController.postQTnotebook);

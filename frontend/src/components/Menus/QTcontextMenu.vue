@@ -7,12 +7,14 @@
         ],
         QTnotebookOptions: [
           {text: 'Delete QTnotebook', option: 'delete', target: { object: 'QTnotebook', _id: '' }},
+          {text: 'Rename notebook', option: 'rename', target: { object: 'QTnotebook', _id: '' }},
         ],
         QTpageBackgroundOptions: [
           {text: 'Add QTpage', option: 'add', target: { object: 'QTpageBackground' }},
         ],
         QTpageOptions: [
           {text: 'Delete QTpage', option: 'delete', target: { object: 'QTpage', _id: '' }},
+          {text: 'Rename QTpage', option: 'rename', target: { object: 'QTpage', _id: '' }},
         ],
         QTcanvasOptions: [
           {text: 'Add QTbox', option: 'add', target: { object: 'canvas' }},
