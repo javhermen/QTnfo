@@ -5,16 +5,21 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue')
-    },
-    {
-      path: '/:QTnotebook',
-      component: () => import('../views/PagesView.vue')
-    },
-    {
-      path: '/:QTnotebook/:QTpage',
-      component: () => import('../views/CanvasViewerView.vue')
+      component: () => import('../views/RouterView.vue'),
+      children: [
+        {
+          path: '/',
+          component: () => import('../components/QTnotebooks/QTnotebooksContainer.vue')
+        },
+        {
+          path: '/:QTnotebook',
+          component: () => import('../components/QTpages/QTpagesContainer.vue')
+        },
+        {
+          path: '/:QTnotebook/:QTpage',
+          component: () => import('../components/QTcanvas/QTcanvas.vue')
+        }
+      ]
     }
   ]
 })
