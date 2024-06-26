@@ -59,16 +59,14 @@
    padding-left: 10px;
    
    margin-top: 10px;
-   margin-left: 15px;
 
    align-content: center;
    display: flex;
 
-   box-shadow: black inset 0px 0px 10px 2px;
    box-shadow: inset 0px 0px 25px -15px rgb(0, 0, 0);
 
    border-radius: 10px;
-   background-color: var(--color-background)
+   background-color: var(--color-background);
   }
 
   #breadcrumb h1 {
