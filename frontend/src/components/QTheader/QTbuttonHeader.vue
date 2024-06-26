@@ -12,29 +12,25 @@
 </script>
 
 <template>
-  <li class="link">
-    <!-- <a href="vier"> -->
+  <li class="linkHeader">
     <RouterLink :to="link">
       <slot>
         <img src="/home-icon.png" alt="">
       </slot>
     </RouterLink>
-    <!-- <img src="/001-a.png" alt=""> -->
-    
-    <!-- </a> -->
   </li>
 </template>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-  a:-webkit-any-link {
+  .linkHeader a:-webkit-any-link {
     color: var(--color-text);
     cursor: pointer;
     text-decoration: none;
   }
 
-  li.link {
+  li.linkHeader {
     width: 75px;
     height: 75px;
     height: 65px;
@@ -48,7 +44,7 @@
     padding-bottom: 0px;
   }
 
-  li.link>a {
+  li.linkHeader>a {
 
     font-family: "Share Tech Mono", monospace;
     font-weight: 400;
@@ -82,7 +78,7 @@
     user-select: none;
   }
 
-  li.link>a>img {
+  li.linkHeader>a>img {
     width: 85%;
     padding-top: 5%;
   }

@@ -12,10 +12,10 @@
 </script>
 
 <template>
-  <li class="link">
+  <li class="linkSidebar">
     <RouterLink :to="link">
       <slot>
-        <img src="/home-icon.png" alt="">
+        <img src="/star.png" alt="">
       </slot>
     </RouterLink>
   </li>
@@ -24,13 +24,17 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-  a:-webkit-any-link {
+  .linkSidebar a:-webkit-any-link {
     color: var(--color-text);
     cursor: pointer;
     text-decoration: none;
   }
 
-  li.link {
+  .linkSidebar a.router-link-exact-active {
+    background-color: rgba(255,255,0,0.8);
+  }
+
+  li.linkSidebar {
     width: 75px;
     height: 75px;
     height: 65px;
@@ -43,7 +47,7 @@
     padding-bottom: 0px;
   }
 
-  li.link>a {
+  li.linkSidebar>a {
 
     font-family: "Share Tech Mono", monospace;
     font-weight: 400;
@@ -79,8 +83,8 @@
     color: var(--color-text);
   }
 
-  li.link>a>img {
+  li.linkSidebar>a>img {
     width: 85%;
-    padding-top: 5%;
+    padding-top: 7%;
   }
 </style>

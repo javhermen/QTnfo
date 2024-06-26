@@ -30,12 +30,24 @@
     },
     beforeCreate() {
       axios
-        // .get('http://localhost:3050/api/'+this.$route.params.QTnotebook+'/pages')
         .get(apiUrl+''+this.$route.params.QTnotebook+'/QTpages')
         .then(response => {
           this.pages = response.data.QTpages;
           this.QTnotebookID = response.data._id
         });
+    },
+    created() {
+      this.$watch(
+        () => this.$route.params.QTnotebook,
+        (newQTnotebook, oldQTnotebook) => {
+          axios
+            .get(apiUrl+''+newQTnotebook+'/QTpages')
+            .then(response => {
+              this.pages = response.data.QTpages;
+              this.QTnotebookID = response.data._id
+            });
+        }
+      )
     },
     methods: {
       setAsHovered(something) {

@@ -31,9 +31,11 @@ app.get('/api/QTnotebooks', ApiController.getAllNotebooks);
 app.get('/api/QTnotebooks/populated', ApiController.getAllnotebooksPopulated);
 app.get('/api/:QTnotebook/QTpages', ApiController.getNotebookPages);
 app.get('/api/:QTnotebook/:QTpage', ApiController.getNotebookPage);
+app.get('/api/QTfavorites', ApiController.getAllQTfavorite);
 
 app.put('/api/QTbox/:QTboxID', ApiController.putQTbox);
 app.put('/api/QTnote/:QTnoteID', ApiController.putQTnote);
+app.put('/api/QTfavorite', ApiController.putQTfavorite);
 
 app.post('/api/QTnotebook', ApiController.postQTnotebook);
 app.post('/api/:QTnotebookID/QTpage', ApiController.postQTpage);

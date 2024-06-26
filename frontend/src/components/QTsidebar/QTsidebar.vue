@@ -1,15 +1,29 @@
 <script>
-  import QTbuttonSidebar from './QTbuttonSidebar.vue'
+  import QTbuttonSidebar from './QTbuttonSidebar.vue';
+  import QTnewButtonSidebar from './QTnewButtonSidebar.vue';
+  import QTcreateModal from '../Menus/QTcreateModal.vue';
+  import apiUrl from '../../assets/apiUrl';
+  import axios from 'axios';
 
   export default {
     data() {
       return {
         rotate: {},
-        hide: {}
+        hide: {},
+        QTfavorites: []
       }
     },
     components: {
-      QTbuttonSidebar
+      QTbuttonSidebar,
+      QTnewButtonSidebar,
+      QTcreateModal
+    },
+    beforeCreate() {
+      axios
+        .get(apiUrl +'QTfavorites')
+        .then(response => {
+          this.QTfavorites = response.data;
+        });
     },
     methods: {
       switchPos() {
@@ -23,6 +37,28 @@
           this.hide = {};
         }
       },
+      favoriteUrl() {
+
+        let url = '';
+
+        if (this.$route.params.QTnotebook) {
+          url += this.$route.params.QTnotebook;
+        }
+
+        if (this.$route.params.QTpage) {
+          url += '/'+this.$route.params.QTpage;
+        }
+
+        axios
+          .put(apiUrl +'QTfavorite', { QTfavorite: { url } } )
+          .then(response => {
+            if (response.data.deleted) {
+              this.QTfavorites = this.QTfavorites.filter(e => e.url !== url)
+            } else {
+              this.QTfavorites.push(response.data);
+            }
+          });
+      }
     }
   }
 </script>
@@ -31,7 +67,8 @@
   <aside>
     <div class="aside" :style="hide">
       <ul>
-        <QTbuttonSidebar link="/notebook/pageNameNum">1</QTbuttonSidebar>
+        <QTnewButtonSidebar @pressed="favoriteUrl" />
+        <QTbuttonSidebar v-for="QTfavorite in QTfavorites" :link="'/'+QTfavorite.url" />
       </ul>
     </div>
     <div class="handle" @mousedown.left="switchPos">

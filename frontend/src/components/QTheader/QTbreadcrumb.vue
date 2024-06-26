@@ -54,6 +54,13 @@
 
 
 <style>
+
+  #breadcrumb a:-webkit-any-link {
+    color: var(--color-text);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
   #breadcrumb {
    padding-right: 10px;
    padding-left: 10px;

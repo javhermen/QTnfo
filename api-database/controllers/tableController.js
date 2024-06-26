@@ -1,3 +1,5 @@
+const QTfavorite = require('../models/QTfavoriteModel');
+
 class TableController {
   static getModel(table) {
     switch (table) {
@@ -156,6 +158,28 @@ class TableController {
       data.dimensions = QTnote.dimensions ? QTnote.dimensions : data.dimensions;
       data.save();
       res.json(data);
+		}
+    catch (error) {
+      console.log(error);
+      this.errorHandler(res, error);
+		}
+	}
+
+  static async updateQTfavorite(res, QTfavorite) {
+		try {
+      let model = this.getModel('QTfavorites');
+      const data = await model.findOne({url: QTfavorite.url});
+
+      console.log(data);
+
+      if (data !== null) {
+        await model.deleteOne({url: QTfavorite.url});
+        res.json( { deleted: true } );
+      } else {
+        const QTfavoriteNew = new model( { url: QTfavorite.url } );
+        await QTfavoriteNew.save();
+        res.json( QTfavoriteNew );
+      }
 		}
     catch (error) {
       console.log(error);

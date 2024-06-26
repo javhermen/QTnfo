@@ -46,6 +46,19 @@
           this.QTpageID = response.data._id;
         });
     },
+    created() {
+      this.$watch(
+        () => this.$route.params.QTpage,
+        (newQTpage, oldQTpage) => {
+          axios
+            .get(apiUrl +''+ this.$route.params.QTnotebook+'/'+newQTpage)
+            .then(response => {
+              this.boxes = response.data.QTboxes;
+              this.QTpageID = response.data._id;
+            });
+        }
+      )
+    },
     methods: {
       congrats() {
         console.log("congrats! You done did it!1!");

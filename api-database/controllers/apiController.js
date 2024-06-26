@@ -46,6 +46,10 @@ class ApiController {
     TableController.getNotebookPage(res, QTnotebook, QTpage);
   }
 
+  static async getAllQTfavorite(req, res) {
+    TableController.getAll(res, 'QTfavorites');
+  }
+
 
   static async putQTbox(req, res) {
     const { QTboxID } = req.params;
@@ -57,6 +61,11 @@ class ApiController {
     const { QTnoteID } = req.params;
     const QTnote = req.body.QTnote;
     TableController.updateQTnote(res, QTnoteID, QTnote);
+  }
+
+  static async putQTfavorite(req, res) {
+    const QTfavorite = req.body.QTfavorite;
+    TableController.updateQTfavorite(res, QTfavorite);
   }
 
 
